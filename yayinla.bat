@@ -3,7 +3,7 @@ chcp 65001 >nul
 setlocal enabledelayedexpansion
 cd /d "%~dp0"
 
-set REPO=https://github.com/kamilsaim/fistakip.git
+set REPO=https://github.com/kamilsaim/Fistakip.git
 set BRANCH=main
 
 echo.
@@ -93,7 +93,7 @@ if errorlevel 1 (
 echo.
 echo   ========================================
 echo     Tamam. Yayinda:
-echo     https://kamilsaim.github.io/fistakip/
+echo     https://kamilsaim.github.io/Fistakip/
 echo   ========================================
 echo.
 echo   (Pages'in guncellemesi 1-2 dakika surebilir)

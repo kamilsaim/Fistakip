@@ -6,12 +6,12 @@
 
 Tek bir HTML dosyası. Kurulum yok, sunucu yok, hesap yok.
 
-[![sürüm](https://img.shields.io/badge/sürüm-1.1.0-1A2320?style=flat-square)](CHANGELOG.md)
+[![sürüm](https://img.shields.io/badge/sürüm-1.2.0-1A2320?style=flat-square)](CHANGELOG.md)
 [![lisans](https://img.shields.io/badge/lisans-MIT-1A2320?style=flat-square)](LICENSE)
-[![tek dosya](https://img.shields.io/badge/tek_dosya-84_KB-BD2731?style=flat-square)](index.html)
+[![tek dosya](https://img.shields.io/badge/tek_dosya-101_KB-BD2731?style=flat-square)](index.html)
 [![bağımlılık](https://img.shields.io/badge/bağımlılık-yok-1A2320?style=flat-square)](#nasıl-çalışır)
 
-[Canlı dene](https://kamilsaim.github.io/fistakip/) · [Kurulum](#kurulum) · [Okuma motorları](#okuma-motorları) · [Gizlilik](#gizlilik)
+[Canlı dene](https://kamilsaim.github.io/Fistakip/) · [Kurulum](#kurulum) · [Okuma motorları](#okuma-motorları) · [Gizlilik](#gizlilik)
 
 </div>
 
@@ -28,8 +28,10 @@ Türk market ve mağaza fişlerini okuyup harcamanı defterler. Fişi tarar, iç
 | 🗂 **Otomatik kategori** | Gıda, Ev & Yaşam, Kıyafet, Yakıt, Eczane ve 4 kategori daha. |
 | 💳 **Ödeme takibi** | Kredi kartı / nakit ayrımı, dağılımıyla birlikte. |
 | 📊 **Aylık seyir** | 6 aylık grafik, geçen aya kıyas, mağaza ve kategori dökümü. |
+| 🎯 **Kategori bütçesi** | Aylık üst sınır koy; %80'de uyarır, aşınca fiş kaydederken haber verir. |
+| 📈 **Ürün fiyat takibi** | Aynı ürünün birim fiyatı zaman içinde nasıl değişti — geçmişi ve eğrisiyle. |
 | 🔍 **Arama** | Mağaza, ürün adı, kategori ve ödeme şeklinde filtreleme. |
-| 📗 **Excel çıktısı** | 5 sayfalı `.xlsx` — fişler, kategori, mağaza, ödeme, aylık özet. |
+| 📗 **Excel çıktısı** | 6 sayfalı `.xlsx` — fişler, kategori, mağaza, ödeme, aylık özet, ürün fiyatları. |
 | 💾 **Yedekleme** | JSON al-ver. Cihaz değiştirince veri taşınır. |
 | 🌙 **Karanlık mod** | Telefonun ayarına göre kendiliğinden. |
 
@@ -39,13 +41,13 @@ Fiş okunamazsa elle de girebilirsin; yanlış okunan alanı kaydetmeden düzelt
 
 ## Kurulum
 
-**Kullanmak için:** [kamilsaim.github.io/fistakip](https://kamilsaim.github.io/fistakip/) adresini aç. iPhone'da Paylaş → *Ana Ekrana Ekle* dersen uygulama gibi açılır.
+**Kullanmak için:** [kamilsaim.github.io/Fistakip](https://kamilsaim.github.io/Fistakip/) adresini aç. iPhone'da Paylaş → *Ana Ekrana Ekle* dersen uygulama gibi açılır.
 
 **Kendi kopyanı çalıştırmak için:**
 
 ```bash
-git clone https://github.com/kamilsaim/fistakip.git
-cd fistakip
+git clone https://github.com/kamilsaim/Fistakip.git
+cd Fistakip
 # Herhangi bir statik sunucu yeter:
 python3 -m http.server 8000
 ```
@@ -147,8 +149,8 @@ Logo ailesi ve kullanım kuralları: [`logo-kilavuz.html`](logo-kilavuz.html)
 
 ## Yol haritası
 
-- [ ] Ürün fiyat takibi — aynı ürünün zaman içindeki fiyat değişimi
-- [ ] Kategori bazlı aylık bütçe ve limit uyarısı
+- [x] Ürün fiyat takibi — aynı ürünün zaman içindeki fiyat değişimi *(v1.2.0)*
+- [x] Kategori bazlı aylık bütçe ve limit uyarısı *(v1.2.0)*
 - [ ] Taksitli alışveriş takibi
 - [ ] Fiş fotoğrafının kayda iliştirilmesi
 - [ ] Çoklu cihaz eşitleme (isteğe bağlı, kendi sunucunla)
@@ -157,7 +159,7 @@ Logo ailesi ve kullanım kuralları: [`logo-kilavuz.html`](logo-kilavuz.html)
 
 ## Katkı
 
-Sorun bildirimi ve öneri için [issue aç](https://github.com/kamilsaim/fistakip/issues).
+Sorun bildirimi ve öneri için [issue aç](https://github.com/kamilsaim/Fistakip/issues).
 
 Tanınmayan bir mağaza varsa `STORE_ALIASES` dizisine, kaçırılan bir kategori varsa `CATS` dizisine eklemek yeterli — ikisi de `index.html` içinde.
 

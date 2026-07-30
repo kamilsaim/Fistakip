@@ -263,6 +263,53 @@
   .cat-amount{font-family:'DM Mono',monospace;font-size:13px;font-variant-numeric:tabular-nums;
     white-space:nowrap;letter-spacing:-.03em}
 
+  /* ═══ BÜTÇE ═══ */
+  .bud-list{display:flex;flex-direction:column;gap:13px}
+  .bud-row{display:flex;align-items:center;gap:11px}
+  .bud-info{flex:1;min-width:0}
+  .bud-name{font-size:13px;font-weight:500;display:flex;justify-content:space-between;gap:8px}
+  .bud-name em{font-family:'DM Mono',monospace;font-style:normal;font-size:10.5px;color:var(--ink3)}
+  .bud-bar-bg{height:5px;background:var(--slip2);border-radius:99px;margin-top:6px;overflow:hidden;position:relative}
+  .bud-bar-fill{height:100%;border-radius:99px;transition:width .8s cubic-bezier(.2,.9,.3,1)}
+  .bud-over .bud-name em{color:var(--fiscal)}
+  .bud-amount{font-family:'DM Mono',monospace;font-size:12px;font-variant-numeric:tabular-nums;
+    white-space:nowrap;letter-spacing:-.03em;text-align:right}
+  .bud-amount small{display:block;font-size:9.5px;color:var(--ink3);letter-spacing:.06em}
+  .bud-flag{font-family:'DM Mono',monospace;font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--fiscal);border:1px solid var(--fiscal);border-radius:99px;padding:1px 5px;margin-left:6px}
+  /* bütçe düzenleme satırı */
+  .bud-edit{display:flex;align-items:center;gap:10px;padding:7px 0}
+  .bud-edit .cat-icon{width:26px;height:26px;border-radius:7px;font-size:13px}
+  .bud-edit label{flex:1;font-size:13px;font-weight:500}
+  .bud-edit input{width:104px;background:var(--slip2);border:1px solid transparent;border-radius:8px;
+    padding:8px 10px;color:var(--ink);font-family:'DM Mono',monospace;font-size:13px;
+    font-variant-numeric:tabular-nums;text-align:right;outline:none}
+  .bud-edit input:focus{border-color:var(--ink)}
+
+  /* ═══ FİYAT SEYRİ ═══ */
+  .price-list{display:flex;flex-direction:column}
+  .price-row{display:flex;align-items:center;gap:11px;padding:10px 0;cursor:pointer;
+    border-bottom:1px solid var(--slip2)}
+  .price-row:last-child{border-bottom:none}
+  .price-row:active{opacity:.6}
+  .price-info{flex:1;min-width:0}
+  .price-name{font-size:13px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .price-meta{font-family:'DM Mono',monospace;font-size:9.5px;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--ink3);margin-top:3px}
+  .spark{flex:0 0 auto;width:56px;height:20px;overflow:visible}
+  .spark path{fill:none;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+  .price-now{font-family:'DM Mono',monospace;font-size:13px;font-variant-numeric:tabular-nums;
+    letter-spacing:-.03em;white-space:nowrap;text-align:right}
+  .price-now .delta{display:block;font-size:10px;letter-spacing:.02em}
+  .up{color:var(--fiscal)} .down{color:var(--cash)} .flat{color:var(--ink3)}
+  /* ürün geçmişi */
+  .hist-row{display:flex;align-items:baseline;gap:10px;padding:8px 0;border-bottom:1px solid var(--slip2)}
+  .hist-row:last-child{border-bottom:none}
+  .hist-date{font-family:'DM Mono',monospace;font-size:11px;color:var(--ink2);flex:0 0 74px}
+  .hist-store{flex:1;min-width:0;font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .hist-price{font-family:'DM Mono',monospace;font-size:12.5px;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .hist-price em{font-style:normal;font-size:10px;margin-left:5px}
+
   /* ═══ FİŞLER ═══ */
   .receipts-list{display:flex;flex-direction:column;gap:22px}
   .receipt-card{padding:14px 15px 13px;cursor:pointer;transition:transform .14s;
@@ -472,6 +519,9 @@
     </div>
   </div>
 
+  <div class="sect"><h2>Aylık bütçe</h2><a class="lbl" href="#" style="color:var(--ink2);border-bottom:1px solid var(--rule)" onclick="event.preventDefault();showBudgets()" id="budgetEdit">düzenle</a></div>
+  <div class="card"><div class="bud-list" id="budgetList"></div></div>
+
   <div class="sect"><h2>Aylık seyir</h2><span class="lbl" id="monthCompare"></span></div>
   <div class="card">
     <div class="bar-chart" id="barChart"></div>
@@ -479,6 +529,9 @@
 
   <div class="sect"><h2>Kategoriler</h2><span class="lbl">dağılım</span></div>
   <div class="card"><div class="cat-list" id="catList"></div></div>
+
+  <div class="sect"><h2>Fiyat seyri</h2><span class="lbl" id="priceNote">ürün başına</span></div>
+  <div class="card"><div class="price-list" id="priceList"></div></div>
 
   <div class="sect"><h2>Ödeme şekli</h2><span class="lbl">nasıl ödedin</span></div>
   <div class="card"><div class="cat-list" id="payList"></div></div>
@@ -551,6 +604,28 @@
     </div>
     <div class="form-group"><label class="form-label">Notlar</label><input class="form-input" id="mNotes" placeholder="Açıklama, ürünler…"></div>
     <button class="btn btn-primary" onclick="saveEntry()">💾 Kaydet</button>
+  </div>
+</div>
+
+<!-- BUDGET MODAL -->
+<div class="modal-overlay" id="budgetModal" onclick="closeModal('budgetModal')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <button class="modal-close" onclick="closeModal('budgetModal')" aria-label="Kapat"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <h2>Aylık bütçe</h2>
+    <div class="privacy-note">Her kategori için aylık üst sınır gir. Boş bıraktığın kategori takip edilmez. Limitin %80'ine gelince uyarır, aşınca fişi kaydederken haber verir.</div>
+    <div id="budgetForm"></div>
+    <button class="btn btn-primary" style="margin-top:14px" onclick="saveBudgets()">💾 Kaydet</button>
+    <button class="btn btn-outline" onclick="clearBudgets()">Tüm limitleri kaldır</button>
+  </div>
+</div>
+
+<!-- PRICE HISTORY MODAL -->
+<div class="modal-overlay" id="priceModal" onclick="closeModal('priceModal')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <button class="modal-close" onclick="closeModal('priceModal')" aria-label="Kapat"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <div id="priceModalContent"></div>
   </div>
 </div>
 
@@ -639,16 +714,17 @@
   <div class="tab" onclick="switchTab('dashboard')"><svg viewBox="0 0 24 24"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>Özet</div>
   <div class="tab" onclick="switchTab('receipts')"><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-2-1.4L14 21l-2-1.4L10 21l-2-1.4L6 21z"/><path d="M9.5 8h5M9.5 12h5"/></svg>Fişler</div>
   <div class="tab" onclick="switchTab('search')"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></svg>Ara</div>
+</div>
 
 <div class="toast" id="toast"></div>
 
 <script>
 /* ══════════════════ SÜRÜM ══════════════════ */
 const APP={
-  version:'1.1.0',
+  version:'1.2.0',
   released:'2026-07-30',
-  codename:'Başparmak',
-  repo:'https://github.com/saimkamil/fis-takip'
+  codename:'Sınır',
+  repo:'https://github.com/kamilsaim/Fistakip'
 };
 
 /* ══════════════════ STORAGE ══════════════════ */
@@ -1335,14 +1411,16 @@ function saveReceipt(){
     && r.skey===storeKey(store));
   if(dup && !confirm(`Bu fiş zaten kayıtlı görünüyor:\n${dup.store} · ${fmtDate(dup.date)} · ₺${dup.total.toFixed(2)}\n\nYine de eklensin mi?`))return;
 
-  list.unshift({
+  const rec={
     id:Date.now(), store, skey:storeKey(store), date:currentResult.date,
     total:currentResult.total, category:currentResult.category, pay,
     items:currentResult.items||[], notes:currentResult.notes||'',
     savedAt:new Date().toISOString()
-  });
+  };
+  list.unshift(rec);
   saveReceipts(list);
   showToast('Fiş kaydedildi','success');
+  checkBudget(rec);
   resetScan();
 }
 
@@ -1355,6 +1433,215 @@ function resetScan(){
   document.getElementById('resultCard').classList.remove('show');
   document.getElementById('rawText').classList.remove('show');
   window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ══════════════════ KATEGORİ BÜTÇESİ ══════════════════ */
+const BKEY='fistakip_budgets';
+const CAT_NAMES=['Gıda','Ev & Yaşam','Kıyafet','Elektronik','Kozmetik','Restoran & Kafe','Yakıt','Sağlık & Eczane','Diğer'];
+const TOTAL_KEY='__total';   /* tüm kategorilerin ortak sınırı */
+
+function getBudgets(){
+  try{ const b=JSON.parse(localStorage.getItem(BKEY)||'{}'); return b&&typeof b==='object'?b:{}; }
+  catch{ return {}; }
+}
+const putBudgets=b=>localStorage.setItem(BKEY,JSON.stringify(b));
+const hasBudgets=b=>Object.values(b||getBudgets()).some(v=>v>0);
+
+/* Bir ayın (YYYY-MM) kategori toplamları */
+function monthSpend(ym){
+  const out={}; let sum=0;
+  getReceipts().forEach(r=>{
+    if(String(r.date||'').slice(0,7)!==ym)return;
+    out[r.category]=(out[r.category]||0)+r.total; sum+=r.total;
+  });
+  out[TOTAL_KEY]=sum;
+  return out;
+}
+const thisMonth=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');};
+
+function showBudgets(){
+  const b=getBudgets();
+  const row=(key,name,icon)=>`<div class="bud-edit">
+    <div class="cat-icon">${icon}</div>
+    <label for="bud-${esc(key)}">${esc(name)}</label>
+    <input id="bud-${esc(key)}" type="number" min="0" step="50" inputmode="decimal"
+           placeholder="—" value="${b[key]>0?b[key]:''}" data-bud="${esc(key)}">
+  </div>`;
+  document.getElementById('budgetForm').innerHTML =
+    row(TOTAL_KEY,'Tüm harcama','∑')
+    + '<div class="tear" style="margin:10px 0"></div>'
+    + CAT_NAMES.map(c=>row(c,c,catIcon(c))).join('');
+  document.getElementById('budgetModal').classList.add('show');
+}
+
+function saveBudgets(){
+  const b={};
+  document.querySelectorAll('#budgetForm input[data-bud]').forEach(i=>{
+    const v=parseFloat(String(i.value).replace(',','.'));
+    if(v>0)b[i.dataset.bud]=Math.round(v*100)/100;
+  });
+  putBudgets(b);
+  closeModal('budgetModal');
+  renderBudgets();
+  showToast(hasBudgets(b)?'Bütçe kaydedildi':'Limitler kaldırıldı','success');
+}
+
+function clearBudgets(){
+  if(!confirm('Tüm bütçe limitleri kaldırılsın mı?'))return;
+  putBudgets({});
+  closeModal('budgetModal');
+  renderBudgets();
+  showToast('Limitler kaldırıldı');
+}
+
+function renderBudgets(){
+  const b=getBudgets(), el=document.getElementById('budgetList');
+  if(!el)return;
+  if(!hasBudgets(b)){
+    el.innerHTML=`<div class="empty-state" style="padding:18px 0">
+      Henüz limit yok.<br><span class="lbl">düzenle&rsquo;ye dokunup kategori sınırı belirle</span></div>`;
+    return;
+  }
+  const spend=monthSpend(thisMonth());
+  const keys=[TOTAL_KEY,...CAT_NAMES].filter(k=>b[k]>0);
+  el.innerHTML=keys.map(k=>{
+    const limit=b[k], used=spend[k]||0, pct=used/limit*100;
+    const over=used>limit, warn=!over&&pct>=80;
+    const color=over?'var(--fiscal)':warn?'#c46020':(k===TOTAL_KEY?'var(--ink)':catColor(k));
+    return `<div class="bud-row${over?' bud-over':''}">
+      <div class="cat-icon">${k===TOTAL_KEY?'∑':catIcon(k)}</div>
+      <div class="bud-info">
+        <div class="bud-name">
+          <span>${k===TOTAL_KEY?'Tüm harcama':esc(k)}${over?'<span class="bud-flag">aşıldı</span>':''}</span>
+          <em>%${pct.toFixed(0)}</em>
+        </div>
+        <div class="bud-bar-bg"><div class="bud-bar-fill" style="width:${Math.min(pct,100)}%;background:${color}"></div></div>
+      </div>
+      <div class="bud-amount">${money(used)}<small>/ ${money(limit)}</small></div>
+    </div>`;
+  }).join('');
+}
+
+/* Fiş kaydedildikten sonra limit kontrolü — yalnız bu ayın fişleri için */
+function checkBudget(r){
+  const b=getBudgets();
+  if(!hasBudgets(b))return;
+  const ym=String(r.date||'').slice(0,7);
+  if(ym!==thisMonth())return;
+  const spend=monthSpend(ym);
+  [r.category,TOTAL_KEY].forEach(k=>{
+    const limit=b[k]; if(!(limit>0))return;
+    const used=spend[k]||0, name=k===TOTAL_KEY?'Aylık toplam':k;
+    if(used>limit)      setTimeout(()=>showToast(`${name} limiti aşıldı — ${money(used)} / ${money(limit)}`,'error'),900);
+    else if(used>=limit*0.8) setTimeout(()=>showToast(`${name} bütçesinin %${(used/limit*100).toFixed(0)}'i kullanıldı`),900);
+  });
+}
+
+/* ══════════════════ ÜRÜN FİYAT TAKİBİ ══════════════════ */
+/* "SÜT 1 LT" ile "Süt 1lt" aynı ürün sayılsın */
+const UNIT_RE=/\b\d+(?:[.,]\d+)?\s*(?:kg|gr?|ml|lt?|cl|adet|ad|paket|pk|pcs|li|lu|x)\b/gi;
+function itemKey(name){
+  return deacc(name)
+    .replace(/[^a-z0-9\s]/g,' ')
+    .replace(UNIT_RE,' ')
+    .replace(/\b\d+(?:[.,]\d+)?\b/g,' ')
+    .replace(/\s+/g,' ').trim();
+}
+
+/* Tüm fişlerdeki ürünleri birim fiyatına göre grupla */
+function priceHistory(){
+  const map=new Map();
+  getReceipts().forEach(r=>(r.items||[]).forEach(it=>{
+    const qty=(+it.qty>0)?+it.qty:1;
+    const unit=(+it.price||0)/qty;
+    if(!(unit>0))return;
+    const k=itemKey(it.name);
+    if(k.length<3)return;
+    let e=map.get(k);
+    if(!e){ e={key:k,name:titleCaseTR(it.name),points:[]}; map.set(k,e); }
+    e.points.push({date:r.date,store:r.store,unit});
+  }));
+
+  const out=[];
+  map.forEach(e=>{
+    e.points.sort((a,b)=>new Date(a.date)-new Date(b.date));
+    if(e.points.length<2)return;
+    const u=e.points.map(p=>p.unit);
+    e.first=u[0]; e.last=u[u.length-1];
+    e.min=Math.min(...u); e.max=Math.max(...u);
+    e.change=e.first>0?(e.last-e.first)/e.first*100:0;
+    out.push(e);
+  });
+  /* en çok oynayan üstte */
+  return out.sort((a,b)=>Math.abs(b.change)-Math.abs(a.change)||b.points.length-a.points.length);
+}
+
+/* minik fiyat eğrisi */
+function spark(points,color){
+  const u=points.map(p=>p.unit), n=u.length;
+  const lo=Math.min(...u), hi=Math.max(...u), span=(hi-lo)||1;
+  const d=u.map((v,i)=>`${(i/(n-1)*54+1).toFixed(1)},${(17-(v-lo)/span*14).toFixed(1)}`).join(' L ');
+  return `<svg class="spark" viewBox="0 0 56 20" aria-hidden="true"><path d="M ${d}" stroke="${color}"/></svg>`;
+}
+
+function renderPrices(){
+  const el=document.getElementById('priceList'), note=document.getElementById('priceNote');
+  if(!el)return;
+  const hist=priceHistory();
+  if(note)note.textContent=hist.length?hist.length+' ürün izleniyor':'ürün başına';
+  if(!hist.length){
+    el.innerHTML=`<div class="empty-state" style="padding:18px 0">
+      Aynı ürünü ikinci kez alınca fiyat seyri burada çıkar.<br>
+      <span class="lbl">ürün listesi çıkaran bir motor gerekir</span></div>`;
+    return;
+  }
+  el.innerHTML=hist.slice(0,8).map(e=>{
+    const cls=Math.abs(e.change)<1?'flat':(e.change>0?'up':'down');
+    const color=cls==='up'?'var(--fiscal)':cls==='down'?'var(--cash)':'var(--ink3)';
+    const sign=e.change>0?'+':e.change<0?'−':'±';
+    return `<div class="price-row" onclick="showPriceDetail('${esc(e.key).replace(/'/g,"\\'")}')">
+      <div class="price-info">
+        <div class="price-name">${esc(e.name)}</div>
+        <div class="price-meta">${e.points.length} kez · ${money(e.min)}–${money(e.max)}</div>
+      </div>
+      ${spark(e.points,color)}
+      <div class="price-now">${money(e.last)}<span class="delta ${cls}">${sign}%${Math.abs(e.change).toFixed(0)}</span></div>
+    </div>`;
+  }).join('');
+}
+
+function showPriceDetail(key){
+  const e=priceHistory().find(x=>x.key===key); if(!e)return;
+  const cls=Math.abs(e.change)<1?'flat':(e.change>0?'up':'down');
+  const sign=e.change>0?'+':e.change<0?'−':'±';
+  const rows=e.points.slice().reverse().map((p,i,arr)=>{
+    const prev=arr[i+1];
+    const d=prev?(p.unit-prev.unit):0;
+    const dc=d>0?'up':d<0?'down':'flat';
+    return `<div class="hist-row">
+      <div class="hist-date">${fmtShort(p.date)}</div>
+      <div class="hist-store">${esc(p.store)}</div>
+      <div class="hist-price">${money(p.unit)}${prev?`<em class="${dc}">${d>0?'+':d<0?'−':'±'}${money(Math.abs(d)).slice(1)}</em>`:''}</div>
+    </div>`;
+  }).join('');
+  document.getElementById('priceModalContent').innerHTML=`
+    <div class="r-head">
+      <div style="flex:1;min-width:0">
+        <div class="r-store" style="font-size:19px">${esc(e.name)}</div>
+        <div class="r-date">${e.points.length} alış · ${fmtShort(e.points[0].date)} → ${fmtShort(e.points[e.points.length-1].date)}</div>
+      </div>
+      <div class="r-total"><span class="lbl">Son birim</span><b>${money(e.last)}</b></div>
+    </div>
+    <div class="hero-grid" style="margin-top:14px;padding-top:0">
+      <div class="hero-cell"><div class="lbl">En düşük</div><b>${money(e.min)}</b></div>
+      <div class="hero-cell"><div class="lbl">En yüksek</div><b>${money(e.max)}</b></div>
+      <div class="hero-cell"><div class="lbl">Değişim</div><b class="${cls}">${sign}%${Math.abs(e.change).toFixed(0)}</b></div>
+    </div>
+    <div class="tear" style="margin:16px 0 4px"></div>
+    <div class="lbl" style="margin:10px 0 4px">Geçmiş</div>${rows}
+    <p style="font-size:11px;color:var(--ink3);margin-top:12px;line-height:1.5">
+      Fiyatlar birim başına (satır tutarı ÷ adet). Farklı gramajlar aynı ürün sayılabilir.</p>`;
+  document.getElementById('priceModal').classList.add('show');
 }
 
 /* ══════════════════ DASHBOARD ══════════════════ */
@@ -1419,6 +1706,9 @@ function renderDashboard(){
   cmp.innerHTML=(p>0&&t>0)
     ? `geçen aya göre <b style="color:${t>p?'var(--fiscal)':'var(--cash)'}">${t>p?'+':'−'}%${Math.abs((t-p)/p*100).toFixed(0)}</b>`
     : 'son 6 ay';
+
+  renderBudgets();
+  renderPrices();
 }
 
 /* tutar sayacı */
@@ -1565,10 +1855,12 @@ function saveEntry(){
   }
   const list=getReceipts();
   const cs=canonicalStore(store);
-  list.unshift({id:Date.now(),store:cs,skey:storeKey(cs),date,total,category:cat,pay,items:[],notes,savedAt:new Date().toISOString()});
+  const rec={id:Date.now(),store:cs,skey:storeKey(cs),date,total,category:cat,pay,items:[],notes,savedAt:new Date().toISOString()};
+  list.unshift(rec);
   saveReceipts(list);
   closeModal('manualModal');
   showToast('Kaydedildi','success');
+  checkBudget(rec);
   renderReceipts();
 }
 
@@ -1578,8 +1870,11 @@ function backupData(){
   if(!list.length){ showToast('Yedeklenecek fiş yok'); return; }
 
   const withKeys=!!document.getElementById('bkKeys')?.checked;
-  const payload={app:'FişTakip',version:APP.version,schema:2,
+  const payload={app:'FişTakip',version:APP.version,schema:3,
     exportedAt:new Date().toISOString(),receipts:list};
+
+  const bud=getBudgets();
+  if(hasBudgets(bud))payload.budgets=bud;
 
   if(withKeys){
     const c=getSettings();
@@ -1616,10 +1911,14 @@ function restoreData(e){
       migrate(cur); saveReceipts(cur);
 
       let extra='';
+      if(d.budgets&&typeof d.budgets==='object'&&hasBudgets(d.budgets)){
+        putBudgets(Object.assign(getBudgets(),d.budgets));
+        extra=' · bütçeler yüklendi';
+      }
       if(d.settings&&(d.settings.geminiKey||d.settings.claudeKey||d.settings.ocrspaceKey)
          &&confirm('Bu yedek API anahtarları içeriyor.\n\nAyarlarına yüklensin mi?')){
         localStorage.setItem(SKEY,JSON.stringify(Object.assign(getSettings(),d.settings)));
-        paintBadge(); paintAbout(); extra=' · anahtarlar yüklendi';
+        paintBadge(); paintAbout(); extra+=' · anahtarlar yüklendi';
       }
       showToast(added+' yeni fiş eklendi (toplam '+cur.length+')'+extra,'success');
       renderDashboard(); renderReceipts();
@@ -1676,6 +1975,18 @@ async function exportData(){
   });
   const ws3=XLSX.utils.aoa_to_sheet(mr); ws3['!cols']=[{wch:22},{wch:12},{wch:14},{wch:14}];
   XLSX.utils.book_append_sheet(wb,ws3,'Aylık Özet');
+
+  // Ürün fiyat seyri
+  const hist=priceHistory();
+  if(hist.length){
+    const hr=[['Ürün','Alış Sayısı','İlk Fiyat (₺)','Son Fiyat (₺)','En Düşük (₺)','En Yüksek (₺)','Değişim (%)','İlk Tarih','Son Tarih']];
+    hist.forEach(e=>hr.push([e.name,e.points.length,+e.first.toFixed(2),+e.last.toFixed(2),
+      +e.min.toFixed(2),+e.max.toFixed(2),+e.change.toFixed(1),
+      e.points[0].date,e.points[e.points.length-1].date]));
+    const wsH=XLSX.utils.aoa_to_sheet(hr);
+    wsH['!cols']=[{wch:30},{wch:12},{wch:13},{wch:13},{wch:13},{wch:13},{wch:12},{wch:12},{wch:12}];
+    XLSX.utils.book_append_sheet(wb,wsH,'Ürün Fiyatları');
+  }
 
   XLSX.writeFile(wb,'fistakip_'+new Date().toISOString().slice(0,10)+'.xlsx');
   showToast('Excel indirildi','success');

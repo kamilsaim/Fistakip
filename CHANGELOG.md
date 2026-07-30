@@ -4,6 +4,20 @@ Bu proje [Semantic Versioning](https://semver.org/lang/tr/) kullanır.
 
 ---
 
+## [1.2.0] — 2026-07-30 · *Sınır*
+
+### Eklendi
+- **Kategori bütçesi.** Özet sekmesine *Aylık bütçe* geldi. Her kategori için üst sınır girilir, ayrıca tüm harcama için ortak bir sınır konabilir. Limitin %80'ine gelince satır turuncuya döner, aşılınca mali kırmızı ve **AŞILDI** damgası. Fişi kaydettiğin an ilgili limit aşıldıysa uyarır. Limitler yedeğe de girer.
+- **Ürün fiyat takibi.** Aynı ürünü ikinci kez alınca *Fiyat seyri* bölümünde çıkar: birim fiyatı (satır tutarı ÷ adet), en düşük–en yüksek aralığı, ilk alıştan bugüne değişim yüzdesi ve minik fiyat eğrisi. Satıra dokununca tam geçmiş açılır — hangi tarihte, hangi mağazada, önceki alışa göre kaç lira fark. "SÜT 1 LT" ile "Süt 1lt" aynı ürün sayılır; gramaj ve adet ekleri temizlenir.
+- Excel çıktısına **Ürün Fiyatları** sayfası — alış sayısı, ilk/son/en düşük/en yüksek fiyat, değişim yüzdesi.
+
+### Düzeltildi
+- Alt gezinme kapsayıcısı kapatılmamış `<div>` bırakıyordu
+- Hakkında bölümündeki GitHub bağlantısı yanlış depoyu gösteriyordu
+- README'deki logo ve banner yolları dosyaların gerçek konumuyla uyuşmuyordu — görseller GitHub'da görünmüyordu
+
+---
+
 ## [1.1.0] — 2026-07-30 · *Başparmak*
 
 ### Değişti

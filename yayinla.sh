@@ -3,7 +3,7 @@
 set -uo pipefail
 cd "$(dirname "$0")"
 
-REPO="https://github.com/kamilsaim/fistakip.git"
+REPO="https://github.com/kamilsaim/Fistakip.git"
 BRANCH="main"
 
 b=$'\e[1m'; d=$'\e[2m'; r=$'\e[31m'; g=$'\e[32m'; n=$'\e[0m'
@@ -65,7 +65,7 @@ if ! git rev-parse "v$VER" >/dev/null 2>&1; then
 fi
 
 printf '\n  %s════════════════════════════════════%s\n' "$g" "$n"
-say "${g}Tamam.${n} https://kamilsaim.github.io/fistakip/"
+say "${g}Tamam.${n} https://kamilsaim.github.io/Fistakip/"
 printf '  %s════════════════════════════════════%s\n\n' "$g" "$n"
 say "${d}Pages'in güncellenmesi 1-2 dakika sürebilir.${n}"
 printf '\n'
