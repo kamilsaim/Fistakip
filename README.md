@@ -7,7 +7,6 @@
 Tek bir HTML dosyası. Kurulum yok, sunucu yok, hesap yok.
 
 [![sürüm](https://img.shields.io/badge/sürüm-1.2.1-1A2320?style=flat-square)](CHANGELOG.md)
-[![lisans](https://img.shields.io/badge/lisans-MIT-1A2320?style=flat-square)](LICENSE)
 [![tek dosya](https://img.shields.io/badge/tek_dosya-100_KB-BD2731?style=flat-square)](index.html)
 [![bağımlılık](https://img.shields.io/badge/bağımlılık-yok-1A2320?style=flat-square)](#nasıl-çalışır)
 
@@ -168,6 +167,8 @@ Tanınmayan bir mağaza varsa `STORE_ALIASES` dizisine, kaçırılan bir kategor
 
 ---
 
-## Lisans
+## Telif
 
-MIT — [LICENSE](LICENSE)
+© 2026 Kamil Saim. **Tüm hakları saklıdır.**
+
+Bu depoda açık kaynak lisansı yoktur. Kod herkese açık olarak görüntülenebilir; kopyalamak, değiştirmek, dağıtmak veya kendi ürününde kullanmak için yazılı izin gerekir.
