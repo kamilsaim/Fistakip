@@ -1,0 +1,26 @@
+{
+  "name": "FişTakip — Akıllı Alışveriş Defteri",
+  "short_name": "FişTakip",
+  "description": "Fişin fotoğrafını çek; mağaza, tarih, ürünler ve tutar kendiliğinden yerine otursun.",
+  "lang": "tr",
+  "dir": "ltr",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#e7eae8",
+  "theme_color": "#1a2320",
+  "categories": ["finance", "productivity", "utilities"],
+  "icons": [
+    {
+      "src": "icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    },
+    {
+      "src": "app-icon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any"
+    }
+  ]
+}

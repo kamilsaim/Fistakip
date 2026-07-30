@@ -6,12 +6,12 @@
 
 Tek bir HTML dosyası. Kurulum yok, sunucu yok, hesap yok.
 
-[![sürüm](https://img.shields.io/badge/sürüm-1.2.0-1A2320?style=flat-square)](CHANGELOG.md)
+[![sürüm](https://img.shields.io/badge/sürüm-1.2.1-1A2320?style=flat-square)](CHANGELOG.md)
 [![lisans](https://img.shields.io/badge/lisans-MIT-1A2320?style=flat-square)](LICENSE)
-[![tek dosya](https://img.shields.io/badge/tek_dosya-101_KB-BD2731?style=flat-square)](index.html)
+[![tek dosya](https://img.shields.io/badge/tek_dosya-100_KB-BD2731?style=flat-square)](index.html)
 [![bağımlılık](https://img.shields.io/badge/bağımlılık-yok-1A2320?style=flat-square)](#nasıl-çalışır)
 
-[Canlı dene](https://kamilsaim.github.io/Fistakip/) · [Kurulum](#kurulum) · [Okuma motorları](#okuma-motorları) · [Gizlilik](#gizlilik)
+[Canlı dene](https://kamilsaim.github.io/Fistakip/) · [Başla](#kullanmaya-başla) · [Okuma motorları](#okuma-motorları) · [Bütçe & fiyat](#bütçe-ve-fiyat-takibi) · [Gizlilik](#gizlilik)
 
 </div>
 
@@ -39,22 +39,11 @@ Fiş okunamazsa elle de girebilirsin; yanlış okunan alanı kaydetmeden düzelt
 
 ---
 
-## Kurulum
+## Kullanmaya başla
 
-**Kullanmak için:** [kamilsaim.github.io/Fistakip](https://kamilsaim.github.io/Fistakip/) adresini aç. iPhone'da Paylaş → *Ana Ekrana Ekle* dersen uygulama gibi açılır.
+[kamilsaim.github.io/Fistakip](https://kamilsaim.github.io/Fistakip/) adresini aç. Kurulum, hesap, izin yok.
 
-**Kendi kopyanı çalıştırmak için:**
-
-```bash
-git clone https://github.com/kamilsaim/Fistakip.git
-cd Fistakip
-# Herhangi bir statik sunucu yeter:
-python3 -m http.server 8000
-```
-
-`index.html` tek başına da açılır — ama tarayıcılar `file://` altında kamerayı ve bazı API'leri kısıtladığı için `http://` üzerinden servis etmek gerekir.
-
-**Yayınlamak için:** Depoyu GitHub Pages'e bağla (Settings → Pages → main / root). Netlify ve Vercel'e de olduğu gibi sürüklenir. Derleme adımı yok.
+iPhone'da Paylaş → *Ana Ekrana Ekle*, Android'de menü → *Uygulamayı yükle* dersen ana ekrana **fiş logosuyla** iner ve adres çubuğu olmadan açılır.
 
 ---
 
@@ -90,6 +79,18 @@ Tesseract.js tarayıcıda çalışır — fotoğraf hiçbir sunucuya gitmez. Ön
 
 ---
 
+## Bütçe ve fiyat takibi
+
+İkisi de Özet sekmesinde, ayrıca bir şey açmadan.
+
+**Aylık bütçe.** *Düzenle*'ye dokun, takip etmek istediğin kategoriye üst sınır gir — boş bıraktığın kategori izlenmez. Kategorilerin üstünde ayrıca tüm harcama için ortak bir sınır konabilir. Satır limitin %80'ine gelince turuncuya, aşılınca mali kırmızıya döner ve **AŞILDI** damgası alır. Fişi kaydettiğin an ilgili limit aşıldıysa uygulama haber verir. Limitler yedeğe dahildir.
+
+**Fiyat seyri.** Aynı ürünü ikinci kez alınca listede çıkar. Karşılaştırma **birim fiyat** üzerinden yapılır (satır tutarı ÷ adet), yani 4'lü aldığın sütle tek aldığın süt aynı ölçekte. Satırda kaç kez alındığı, en düşük–en yüksek aralık, ilk alıştan bugüne değişim ve minik fiyat eğrisi durur; dokununca hangi tarihte hangi mağazada kaça aldığın ve önceki alışa göre kaç lira fark ettiği açılır.
+
+Ürün adları eşleştirilirken gramaj ve adet ekleri temizlenir — `SÜT 1 LT`, `Süt 1lt` ve `süt  1 LT` tek üründür. Bu yüzden farklı gramajlar da aynı sayılabilir; ayrıştırıcı ürün satırı çıkarmayan bir fişte (ör. akaryakıt) fiyat takibi olmaz.
+
+---
+
 ## Gizlilik
 
 - **Fişler cihazdan çıkmaz.** Hepsi tarayıcının `localStorage`'ında durur. Sunucu yok, hesap yok, analitik yok.
@@ -112,6 +113,8 @@ Tek bir `index.html`. Derleme aracı, paket yöneticisi, `node_modules` yok. Kü
 | SheetJS | Excel çıktısı alınırken | `.xlsx` üretimi |
 
 Uygulama açılırken hiçbiri inmez.
+
+Yanında duran diğer dosyalar yalnızca kimlik içindir: ana ekran ikonu (`icon-512.png`), `manifest.webmanifest` ve logo varyantları. Uygulama mantığının tamamı `index.html` içinde.
 
 ---
 

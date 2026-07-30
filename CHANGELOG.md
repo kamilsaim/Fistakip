@@ -4,6 +4,17 @@ Bu proje [Semantic Versioning](https://semver.org/lang/tr/) kullanır.
 
 ---
 
+## [1.2.1] — 2026-07-30
+
+### Düzeltildi
+- **Ana ekran ikonu görünmüyordu.** `apple-touch-icon` bir SVG data-URI'siydi; iOS Safari SVG ana ekran ikonunu yok sayar, o yüzden *Ana Ekrana Ekle* logo yerine sayfanın ekran görüntüsünü koyuyordu. Artık `icon-512.png` gösteriliyor.
+
+### Eklendi
+- **`manifest.webmanifest`** — Android/Chrome'da "Uygulamayı yükle" artık logoyu kullanıyor, uygulama adres çubuğu olmadan (`standalone`) açılıyor, açılış zemini termal kağıt rengi.
+- `mobile-web-app-capable` ve iOS durum çubuğu meta etiketleri
+
+---
+
 ## [1.2.0] — 2026-07-30 · *Sınır*
 
 ### Eklendi
