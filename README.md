@@ -1,12 +1,12 @@
 <div align="center">
 
-<img src="assets/banner.png" alt="FişTakip" width="720">
+<img src="banner.png" alt="FişTakip" width="720">
 
 **Fişin fotoğrafını çek. Mağaza, tarih, ürünler ve tutar kendiliğinden yerine otursun.**
 
 Tek bir HTML dosyası. Kurulum yok, sunucu yok, hesap yok.
 
-[![sürüm](https://img.shields.io/badge/sürüm-1.0.0-1A2320?style=flat-square)](CHANGELOG.md)
+[![sürüm](https://img.shields.io/badge/sürüm-1.1.0-1A2320?style=flat-square)](CHANGELOG.md)
 [![lisans](https://img.shields.io/badge/lisans-MIT-1A2320?style=flat-square)](LICENSE)
 [![tek dosya](https://img.shields.io/badge/tek_dosya-84_KB-BD2731?style=flat-square)](index.html)
 [![bağımlılık](https://img.shields.io/badge/bağımlılık-yok-1A2320?style=flat-square)](#nasıl-çalışır)
@@ -119,7 +119,7 @@ Tasarım dili konunun kendisinden alındı: **termal fiş kağıdı.**
 
 <table>
 <tr>
-<td width="90" align="center"><img src="assets/logo.png" width="70"></td>
+<td width="90" align="center"><img src="logo.png" width="70"></td>
 <td>
 
 Zemin krem değil, fiş kağıdının soğuk gri-yeşili. Mürekkep saf siyah değil, termal yazıcının isli karası. Kartların altı yırtık, tutarlar monospace sütunda hizalı.
@@ -141,7 +141,7 @@ Tek vurgu rengi **mali damga kırmızısı** ve anlam taşıyor: logodaki kırm�
 
 **Yazı tipleri** — Bricolage Grotesque (başlık), Archivo (metin), DM Mono (rakam ve etiket).
 
-Logo ailesi ve kullanım kuralları: [`assets/logo-kilavuz.html`](assets/logo-kilavuz.html)
+Logo ailesi ve kullanım kuralları: [`logo-kilavuz.html`](logo-kilavuz.html)
 
 ---
 

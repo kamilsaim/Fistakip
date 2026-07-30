@@ -4,6 +4,18 @@ Bu proje [Semantic Versioning](https://semver.org/lang/tr/) kullanır.
 
 ---
 
+## [1.1.0] — 2026-07-30 · *Başparmak*
+
+### Değişti
+- **Gezinme alta taşındı.** Tara / Özet / Fişler / Ara artık ekranın altında, başparmak erişiminde. Aktif sekme üstünde ince kırmızı çizgiyle işaretleniyor. iPhone ana ekran çubuğu için güvenli alan boşluğu bırakıldı.
+- **Pencereler ekranın ortasında** açılıyor. Alttan kayan yaprak yerine ölçeklenerek beliren kart; sürükleme tutamacı kaldırıldı.
+- Bildirimler alt menünün üstüne alındı.
+
+### Eklendi
+- **Yedeğe API anahtarı ekleme** — isteğe bağlı. Kutucuk işaretlenip onay verilirse motor ayarları ve anahtarlar yedeğe girer; dosya adına `ANAHTARLI` eklenir. Geri yüklerken ayrıca sorulur.
+
+---
+
 ## [1.0.0] — 2026-07-30 · *Termal*
 
 İlk kararlı sürüm. Tasarım dili, logo ve sürümleme yerine oturdu.
