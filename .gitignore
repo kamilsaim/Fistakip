@@ -1,0 +1,17 @@
+# sistem
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# editör
+.vscode/
+.idea/
+*.swp
+
+# yedekler (kişisel veri — depoya girmesin)
+fistakip-yedek-*.json
+*.xlsx
+
+# geçici
+*.log
+*.tmp
