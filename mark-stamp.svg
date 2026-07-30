@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="FişTakip">
+  <g transform="rotate(-7 32 32)">
+    <rect x="10" y="14" width="44" height="36" rx="5" fill="none" stroke="#BD2731" stroke-width="2.8"/>
+    <path d="M25 22a2.5 2.5 0 0 1 2.5-2.5h9a2.5 2.5 0 0 1 2.5 2.5v18l-2.5 2.5-2.5-2.5-2.5 2.5-2.5-2.5-2.5 2.5z" fill="#1A2320"/>
+    <path d="M29 26h6M29 31h6" stroke="#FBFCFB" stroke-width="1.9" stroke-linecap="round"/>
+  </g>
+</svg>
