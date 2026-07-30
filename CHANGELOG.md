@@ -4,6 +4,16 @@ Bu proje [Semantic Versioning](https://semver.org/lang/tr/) kullanır.
 
 ---
 
+## Yayınlanmadı
+
+Uygulamanın kendisinde değişiklik yok; yalnız depo düzeni.
+
+### Kaldırıldı
+- **MIT lisansı.** `LICENSE` dosyası ve README'deki lisans rozeti kaldırıldı, yerine telif bildirimi kondu: kod görüntülenebilir, kullanmak için yazılı izin gerekir. Not: `v1.0.0`–`v1.2.1` etiketleri MIT altında yayınlandı, o kopyalar için verilen izin geri alınamaz.
+- `yayinla.bat` ve `yayinla.sh` — tek tıkla yayınlama scriptleri
+
+---
+
 ## [1.2.1] — 2026-07-30
 
 ### Düzeltildi
