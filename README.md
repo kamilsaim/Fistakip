@@ -6,7 +6,7 @@
 
 Tek bir HTML dosyası. Kurulum yok, sunucu yok, hesap yok.
 
-[![sürüm](https://img.shields.io/badge/sürüm-1.2.1-1A2320?style=flat-square)](CHANGELOG.md)
+[![sürüm](https://img.shields.io/badge/sürüm-1.2.2-1A2320?style=flat-square)](CHANGELOG.md)
 [![tek dosya](https://img.shields.io/badge/tek_dosya-100_KB-BD2731?style=flat-square)](index.html)
 [![bağımlılık](https://img.shields.io/badge/bağımlılık-yok-1A2320?style=flat-square)](#nasıl-çalışır)
 

@@ -4,7 +4,7 @@ Bu proje [Semantic Versioning](https://semver.org/lang/tr/) kullanır.
 
 ---
 
-## Yayınlanmadı
+## [1.2.2] — 2026-08-25
 
 ### Düzeltildi
 - **Gemini okuma sırasında "Gemini hatası (503)".** 503, Google'ın "model şu an aşırı yoğun" yanıtı — kalıcı bir arıza değil, ama uygulama tek deneme yapıp pes ediyordu. Artık geçici sunucu hataları (500/502/503/504) ve kopan bağlantılar için üstel bekleyişle 4 denemeye kadar tekrar deneniyor (`Retry-After` başlığı varsa ona uyuluyor), ilerleme çubuğunda "Gemini yoğun, X sn sonra tekrar denenecek" yazıyor. Model hâlâ yoğunsa aynı anahtarın erişebildiği alternatif bir modelle bir kez daha deneniyor. Hepsi başarısız olursa ne yapılacağını söyleyen bir mesaj gösteriliyor ("birkaç dakika sonra tekrar dene veya Claude / Yerel OCR motoruna geç") — çıplak hata kodu yerine.
