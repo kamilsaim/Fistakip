@@ -817,6 +817,36 @@ function setProgress(pct,txt){
   document.getElementById('progressText').textContent=txt;
 }
 
+/* ---- Geçici sunucu hatalarında tekrar deneme ----
+   Gemini yoğunken 503 "model overloaded" döner; birkaç saniye sonra genelde geçer. */
+const RETRY_STATUS=[500,502,503,504];
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+
+function retryWaitMs(res,attempt,base){
+  const h=res&&res.headers&&res.headers.get('retry-after');
+  const secs=h&&/^\d+$/.test(h.trim())?+h.trim():0;
+  if(secs)return Math.min(secs*1000,15000);
+  return Math.round(base*Math.pow(2,attempt)*(0.8+Math.random()*0.4));
+}
+
+/* doFetch() bir fetch sözü döndürür. Geçici hata/ağ kopması olursa bekleyip tekrar dener. */
+async function fetchRetry(doFetch,{tries=4,base=1200,onRetry}={}){
+  let lastErr=null;
+  for(let i=0;i<tries;i++){
+    let res=null;
+    try{ res=await doFetch(); }
+    catch(e){ lastErr=e; }                       // ağ hatası / bağlantı kopması
+    if(res&&!RETRY_STATUS.includes(res.status))return res;
+    if(i===tries-1){
+      if(res)return res;
+      throw lastErr||new Error('Bağlantı kurulamadı');
+    }
+    const wait=retryWaitMs(res,i,base);
+    if(onRetry)onRetry({attempt:i+1,tries,wait,status:res?res.status:0});
+    await sleep(wait);
+  }
+}
+
 async function analyzeReceipt(){
   if(!currentImage)return;
   document.getElementById('analyzeBtn').disabled=true;
@@ -879,7 +909,7 @@ Kurallar: Türk sayı formatı 1.250,00 = 1250.00 demektir. TOPKDV ile TOPLAM'ı
 
 /* Anahtarın erişebildiği modelleri Google'dan sor */
 async function listGeminiModels(key){
-  const res=await fetch('https://generativelanguage.googleapis.com/v1beta/models?key='+encodeURIComponent(key)+'&pageSize=200');
+  const res=await fetchRetry(()=>fetch('https://generativelanguage.googleapis.com/v1beta/models?key='+encodeURIComponent(key)+'&pageSize=200'),{tries:3,base:900});
   if(!res.ok){
     if(res.status===400||res.status===403)throw new Error('Anahtar geçersiz veya Generative Language API kapalı.');
     throw new Error('Model listesi alınamadı ('+res.status+')');
@@ -904,8 +934,8 @@ function rankGeminiModel(n){
   return s;
 }
 
-async function pickGeminiModel(key){
-  const models=await listGeminiModels(key);
+async function pickGeminiModel(key,exclude=[]){
+  const models=(await listGeminiModels(key)).filter(m=>!exclude.includes(m));
   if(!models.length)throw new Error('Bu anahtarla kullanılabilir model yok. AI Studio\'da yeni bir anahtar oluştur.');
   return models.sort((a,b)=>rankGeminiModel(b)-rankGeminiModel(a))[0];
 }
@@ -925,8 +955,19 @@ async function readWithGemini(key){
        generationConfig:{responseMimeType:'application/json',temperature:0}
      })});
 
+  // Google yoğunken 503 döndürür; bekleyip tekrar denemek çoğu zaman yeter
+  const busyNote=({attempt,tries,wait})=>
+    setProgress(35+attempt*8,'Gemini yoğun, '+Math.round(wait/1000)+' sn sonra tekrar denenecek ('+attempt+'/'+(tries-1)+')…');
+
+  const callRetry=m=>fetchRetry(()=>call(m),{tries:4,base:1500,onRetry:busyNote});
+
   setProgress(35,'Gemini\'ye gönderiliyor…');
-  let res=await call(model);
+  let res;
+  try{
+    res=await callRetry(model);
+  }catch(e){
+    throw new Error('Gemini\'ye ulaşılamadı. İnternet bağlantını kontrol et.');
+  }
 
   // 404 → model bu anahtarda yok, listeden doğrusunu bul ve tekrar dene
   if(res.status===404){
@@ -934,11 +975,23 @@ async function readWithGemini(key){
     model=await pickGeminiModel(key);
     localStorage.setItem(SKEY,JSON.stringify(Object.assign(getSettings(),{geminiModel:model})));
     setProgress(55,'"'+model+'" ile tekrar deneniyor…');
-    res=await call(model);
+    res=await callRetry(model);
+  }
+
+  // Model hâlâ yoğunsa: aynı anahtarın erişebildiği başka bir modelle bir kez dene
+  if(res.status===503){
+    setProgress(60,'Model yoğun, alternatif model deneniyor…');
+    try{
+      const alt=await pickGeminiModel(key,[model]);
+      const altRes=await fetchRetry(()=>call(alt),{tries:2,base:1500,onRetry:busyNote});
+      if(altRes.ok){ model=alt; res=altRes; }
+    }catch(e){ /* alternatif bulunamadı, aşağıdaki 503 mesajı gösterilecek */ }
   }
 
   if(!res.ok){
     const t=await res.text().catch(()=>'');
+    if(res.status===503)throw new Error('Gemini şu an aşırı yoğun (503). Birkaç dakika sonra tekrar dene veya Ayarlar\'dan Claude / Yerel OCR motoruna geç.');
+    if(RETRY_STATUS.includes(res.status))throw new Error('Gemini sunucusu geçici olarak yanıt vermiyor ('+res.status+'). Birazdan tekrar dene.');
     if(res.status===429)throw new Error('Günlük ücretsiz kota doldu. Yarın tekrar dene veya başka motora geç.');
     if(res.status===403)throw new Error('Erişim reddedildi. AI Studio\'da Generative Language API açık mı kontrol et.');
     if(res.status===400&&/API key|API_KEY/i.test(t))throw new Error('Gemini anahtarı geçersiz. Ayarlardan kontrol et.');
