@@ -329,6 +329,19 @@
     border-top:1px solid var(--slip2);
     font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.06em;color:var(--ink3)}
   .receipt-tag{white-space:nowrap}
+  .receipt-tag.led{font-weight:600}
+
+  /* ═══ DEFTER ═══ */
+  .led-row{display:flex;gap:7px;align-items:center;margin-bottom:8px}
+  .led-row .form-input{margin-bottom:0;min-width:0}
+  .led-icon{flex:0 0 52px;width:52px;text-align:center;padding-left:6px;padding-right:6px}
+  .led-name{flex:1 1 auto;width:auto}
+  .led-color{flex:0 0 42px;width:42px;height:43px;padding:3px;cursor:pointer;
+    border:1px solid var(--rule);border-radius:9px;background:var(--slip)}
+  .led-del{flex:0 0 42px;width:42px;height:43px;cursor:pointer;font-size:13px;line-height:1;
+    border:1px solid var(--rule);border-radius:9px;background:var(--slip);color:var(--ink3)}
+  .led-del:hover{color:var(--cash);border-color:var(--cash)}
+  .led-pick{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0 2px}
 
   /* ═══ ARA ═══ */
   .search-input{
@@ -483,6 +496,8 @@
         <b id="resTotal">—</b>
       </div>
     </div>
+    <div class="form-group" style="margin:12px 0 0"><label class="form-label">Defter</label>
+      <select class="form-select" id="resGrp" style="margin-bottom:0"></select></div>
     <div class="note">Yanlış okunan bir alan varsa <b>Düzelt</b> ile kaydetmeden değiştir.</div>
     <div class="tear"></div>
     <div class="items-list" id="resItems"></div>
@@ -537,6 +552,9 @@
   <div class="sect"><h2>Fiyat seyri</h2><span class="lbl" id="priceNote">ürün başına</span></div>
   <div class="card"><div class="price-list" id="priceList"></div></div>
 
+  <div class="sect"><h2>Defterler</h2><span class="lbl">iş / ev ayrımı</span></div>
+  <div class="card"><div class="cat-list" id="ledList"></div></div>
+
   <div class="sect"><h2>Ödeme şekli</h2><span class="lbl">nasıl ödedin</span></div>
   <div class="card"><div class="cat-list" id="payList"></div></div>
 
@@ -547,6 +565,7 @@
 <!-- RECEIPTS -->
 <div class="page" id="page-receipts">
   <div class="sect"><h2>Tüm fişler</h2><span class="lbl" id="receiptCount">0 kayıt</span></div>
+  <div class="filter-row" id="ledRow"></div>
   <div class="receipts-list" id="receiptsList"></div>
 </div>
 
@@ -569,6 +588,7 @@
     <div class="filter-chip" onclick="setPayFilter('Kredi Kartı',this)">💳 Kredi Kartı</div>
     <div class="filter-chip" onclick="setPayFilter('Nakit',this)">💵 Nakit</div>
   </div>
+  <div class="filter-row" id="ledFilterRow"></div>
   <div class="receipts-list" id="searchResults"></div>
 </div>
 
@@ -606,6 +626,8 @@
         </select>
       </div>
     </div>
+    <div class="form-group"><label class="form-label">Defter</label>
+      <select class="form-select" id="mGrp"></select></div>
     <div class="form-group"><label class="form-label">Notlar</label><input class="form-input" id="mNotes" placeholder="Açıklama, ürünler…"></div>
     <button class="btn btn-primary" onclick="saveEntry()">💾 Kaydet</button>
   </div>
@@ -682,6 +704,11 @@
     <div class="privacy-note">🔒 Anahtarların yalnızca <b>bu telefonun hafızasında</b> saklanır. Uygulama koduna veya GitHub'a hiçbir zaman yazılmaz.</div>
     <button class="btn btn-primary" onclick="saveSettings()">💾 Kaydet</button>
 
+    <h2 style="margin-top:26px">Defterler</h2>
+    <div class="privacy-note">Kategori <b>ne aldığını</b> söyler; defter <b>hangi bütçeden</b> çıktığını. Örneğin İşyeri ve Ev. Fişler sekmesinde deftere göre süzebilir, Özet'te ayrı toplamlarını görebilirsin. Adını değiştirirsen o defterdeki fişler de taşınır.</div>
+    <div id="ledEditor"></div>
+    <button class="btn btn-outline" onclick="addLedger()">+ Defter ekle</button>
+
     <h2 style="margin-top:26px">Yedekleme</h2>
     <div class="privacy-note warn">
       ⚠️ <b>Önemli:</b> Fişlerin telefonun tarayıcı hafızasında duruyor. iOS Safari, uzun süre açılmayan siteleri temizleyebilir. Ara sıra yedek al.
@@ -725,9 +752,9 @@
 <script>
 /* ══════════════════ SÜRÜM ══════════════════ */
 const APP={
-  version:'1.2.2',
+  version:'1.3.0',
   released:'2026-08-25',
-  codename:'Sınır',
+  codename:'Defter',
   repo:'https://github.com/kamilsaim/Fistakip'
 };
 
@@ -740,6 +767,125 @@ function getReceipts(){
   if(typeof migrate==='function' && migrate(l)) saveReceipts(l);
   return l;
 }
+
+/* ══════════════════ DEFTERLER ══════════════════ */
+/* Kategoriden bağımsız ikinci ayrım: fiş hangi bütçeye ait (İşyeri, Ev, …) */
+const LKEY='fistakip_ledgers';
+const LAST_LKEY='fistakip_last_ledger';
+const NO_LED='__none';                 /* deftere atanmamış fişler */
+const DEFAULT_LEDGERS=[
+  {name:'İşyeri',icon:'🏢',color:'#1f6f8b'},
+  {name:'Ev',    icon:'🏠',color:'#a3592a'}
+];
+let LEDGERS=null;
+function getLedgers(){
+  if(!LEDGERS){
+    let l=null;
+    try{ l=JSON.parse(localStorage.getItem(LKEY)); }catch{}
+    LEDGERS=Array.isArray(l)?l.filter(x=>x&&x.name):DEFAULT_LEDGERS.map(x=>Object.assign({},x));
+  }
+  return LEDGERS;
+}
+function putLedgers(l){ LEDGERS=l; localStorage.setItem(LKEY,JSON.stringify(l)); }
+const ledgerBy=n=>getLedgers().find(l=>l.name===n);
+const ledIcon =n=>(ledgerBy(n)||{}).icon||'📁';
+const ledColor=n=>(ledgerBy(n)||{}).color||'#8a857e';
+const lastLedger=()=>localStorage.getItem(LAST_LKEY)||'';
+const rememberLedger=n=>localStorage.setItem(LAST_LKEY,n||'');
+
+/* Deftere göre süz: 'all' = hepsi, NO_LED = ayrılmamışlar */
+function byLedger(list,f){
+  if(f==='all')return list;
+  if(f===NO_LED)return list.filter(r=>!r.grp);
+  return list.filter(r=>r.grp===f);
+}
+
+/* Süzgeç çipleri — isimler yerine indeks gönderilir (tırnak/karakter derdi olmasın) */
+function ledgerChips(all,active,fn){
+  const cnt=n=>all.filter(r=>(r.grp||NO_LED)===n).length;
+  const chip=(on,i,label)=>`<div class="filter-chip${on?' active':''}" onclick="${fn}(${i})">${label}</div>`;
+  let h=chip(active==='all',-1,'Tüm defterler · '+all.length);
+  getLedgers().forEach((l,i)=>{ h+=chip(active===l.name,i,`${l.icon||'📁'} ${esc(l.name)} · ${cnt(l.name)}`); });
+  const none=cnt(NO_LED);
+  if(none)h+=chip(active===NO_LED,-2,'Ayrılmamış · '+none);
+  return h;
+}
+const ledgerByIndex=i=>i===-1?'all':i===-2?NO_LED:((getLedgers()[i]||{}).name||'all');
+
+/* <select> doldur */
+function fillLedgerSelect(id,val){
+  const el=document.getElementById(id); if(!el)return;
+  el.innerHTML='<option value="">— Ayrılmamış —</option>'+
+    getLedgers().map(l=>`<option value="${esc(l.name)}">${l.icon||'📁'} ${esc(l.name)}</option>`).join('');
+  el.value=getLedgers().some(l=>l.name===val)?val:'';
+}
+
+/* ---- Ayarlardaki defter düzenleyici ---- */
+function renderLedgerEditor(){
+  const box=document.getElementById('ledEditor'); if(!box)return;
+  const l=getLedgers();
+  box.innerHTML=l.length?l.map((x,i)=>`
+    <div class="led-row">
+      <input class="form-input led-icon" value="${esc(x.icon||'📁')}" maxlength="3" aria-label="Simge"
+             onchange="editLedger(${i},'icon',this.value)">
+      <input class="form-input led-name" value="${esc(x.name)}" maxlength="24" aria-label="Defter adı"
+             onchange="editLedger(${i},'name',this.value)">
+      <input type="color" class="led-color" value="${esc(x.color||'#8a857e')}" aria-label="Renk"
+             onchange="editLedger(${i},'color',this.value)">
+      <button class="led-del" onclick="delLedger(${i})" aria-label="Defteri sil">✕</button>
+    </div>`).join('')
+    :'<div class="lbl" style="padding:6px 0">Henüz defter yok</div>';
+}
+function editLedger(i,field,val){
+  const l=getLedgers(), t=l[i]; if(!t)return;
+  val=String(val||'').trim();
+  if(field==='name'){
+    if(!val){ showToast('⚠️ Defter adı boş olamaz','error'); renderLedgerEditor(); return; }
+    if(l.some((x,j)=>j!==i&&x.name===val)){ showToast('⚠️ Bu isimde bir defter zaten var','error'); renderLedgerEditor(); return; }
+    if(t.name!==val){
+      const rl=getReceipts(); let moved=0;
+      rl.forEach(r=>{ if(r.grp===t.name){ r.grp=val; moved++; } });
+      if(moved){ saveReceipts(rl); showToast(moved+' fiş "'+val+'" defterine taşındı'); }
+      if(ledFilter===t.name)ledFilter=val;
+      if(searchLed===t.name)searchLed=val;
+      if(lastLedger()===t.name)rememberLedger(val);
+    }
+  }
+  if(!val&&field!=='color')return;
+  t[field]=val||t[field];
+  putLedgers(l); renderLedgerEditor(); refreshLedgerViews();
+}
+function addLedger(){
+  const name=(prompt('Yeni defter adı (örn: İşyerim, Ev, Araba)')||'').trim();
+  if(!name)return;
+  const l=getLedgers();
+  if(l.some(x=>x.name===name)){ showToast('⚠️ Bu isimde bir defter zaten var','error'); return; }
+  l.push({name:name.slice(0,24),icon:'📁',color:'#8a857e'});
+  putLedgers(l); renderLedgerEditor(); refreshLedgerViews();
+  showToast('"'+name+'" defteri eklendi','success');
+}
+function delLedger(i){
+  const l=getLedgers(), t=l[i]; if(!t)return;
+  const used=getReceipts().filter(r=>r.grp===t.name).length;
+  if(!confirm('"'+t.name+'" defteri silinsin mi?'+(used?'\n\n'+used+' fiş "Ayrılmamış" olacak — fişlerin silinmez.':'')))return;
+  if(used){ const rl=getReceipts(); rl.forEach(r=>{ if(r.grp===t.name)r.grp=''; }); saveReceipts(rl); }
+  if(ledFilter===t.name)ledFilter='all';
+  if(searchLed===t.name)searchLed='all';
+  if(lastLedger()===t.name)rememberLedger('');
+  l.splice(i,1); putLedgers(l);
+  renderLedgerEditor(); refreshLedgerViews();
+  showToast('Defter silindi');
+}
+/* Kayıtlı bir fişin defterini değiştir (detay penceresinden) */
+function setReceiptLedger(id,i){
+  const name=ledgerByIndex(i), list=getReceipts(), r=list.find(x=>x.id===id);
+  if(!r)return;
+  r.grp=(name==='all'||name===NO_LED)?'':name;
+  saveReceipts(list); rememberLedger(r.grp);
+  showDetail(id); refreshLedgerViews();
+  showToast(r.grp?'"'+r.grp+'" defterine taşındı':'Defterden çıkarıldı');
+}
+function refreshLedgerViews(){ renderReceipts(); doSearch(); renderDashboard(); }
 
 /* ══════════════════ TABS ══════════════════ */
 function switchTab(t){
@@ -1149,7 +1295,7 @@ function showSettings(){
     sel.style.display='block';
     info.textContent='Kayıtlı model. Değiştirmek için Modelleri Getir.';
   }else{ sel.style.display='none'; info.textContent=''; }
-  paintEngine(); paintAbout();
+  paintEngine(); paintAbout(); renderLedgerEditor();
   document.getElementById('settingsModal').classList.add('show');
 }
 function pickEngine(e){ pendingEngine=e; paintEngine(); }
@@ -1338,6 +1484,7 @@ function showResult(r){
   let b=`<span class="category-badge" style="background:${c}1a;color:${c}">${catIcon(r.category)} ${r.category}</span>`;
   if(pay!=='Diğer')b+=`<span class="category-badge" style="background:${PAY_COLOR[pay]}1a;color:${PAY_COLOR[pay]}">${pay}</span>`;
   document.getElementById('resCats').innerHTML=b;
+  fillLedgerSelect('resGrp', r.grp!==undefined?r.grp:lastLedger());
 
   const list=document.getElementById('resItems');
   list.innerHTML = r.items.length
@@ -1364,6 +1511,7 @@ function editResult(){
   document.getElementById('mTotal').value=currentResult.total.toFixed(2);
   document.getElementById('mCat').value=currentResult.category;
   document.getElementById('mPay').value=normPayment(currentResult.payment,currentResult.notes);
+  fillLedgerSelect('mGrp', currentResult.grp!==undefined?currentResult.grp:(document.getElementById('resGrp')||{}).value||lastLedger());
   document.getElementById('mNotes').value=currentResult.notes||'';
   document.getElementById('manualModal').classList.add('show');
 }
@@ -1468,9 +1616,11 @@ function saveReceipt(){
     && r.skey===storeKey(store));
   if(dup && !confirm(`Bu fiş zaten kayıtlı görünüyor:\n${dup.store} · ${fmtDate(dup.date)} · ₺${dup.total.toFixed(2)}\n\nYine de eklensin mi?`))return;
 
+  const grp=(document.getElementById('resGrp')||{}).value||'';
+  rememberLedger(grp);
   const rec={
     id:Date.now(), store, skey:storeKey(store), date:currentResult.date,
-    total:currentResult.total, category:currentResult.category, pay,
+    total:currentResult.total, category:currentResult.category, pay, grp,
     items:currentResult.items||[], notes:currentResult.notes||'',
     savedAt:new Date().toISOString()
   };
@@ -1751,6 +1901,12 @@ function renderDashboard(){
   const cats={}; list.forEach(r=>cats[r.category]=(cats[r.category]||0)+r.total);
   document.getElementById('catList').innerHTML=breakdown(cats,catIcon,catColor);
 
+  const leds={}; list.forEach(r=>{const g=r.grp||'Ayrılmamış'; leds[g]=(leds[g]||0)+r.total;});
+  const ledEl=document.getElementById('ledList');
+  if(ledEl)ledEl.innerHTML=breakdown(leds,
+    g=>g==='Ayrılmamış'?'📄':ledIcon(g),
+    g=>g==='Ayrılmamış'?'#8a857e':ledColor(g));
+
   const pays={}; list.forEach(r=>{const p=r.pay||'Diğer'; pays[p]=(pays[p]||0)+r.total;});
   document.getElementById('payList').innerHTML=breakdown(pays,()=>'',p=>PAY_COLOR[p]||'#8a857e');
 
@@ -1803,26 +1959,37 @@ const PAY_COLOR={'Kredi Kartı':'#2d6eb0','Nakit':'#2d8a5e','Diğer':'#8a857e'};
 
 /* ══════════════════ LISTS ══════════════════ */
 function card(r,q,i){
-  const meta=[fmtShort(r.date), r.category.toUpperCase()];
-  if(r.pay&&r.pay!=='Diğer')meta.push(r.pay.toUpperCase());
+  const up=t=>String(t).toLocaleUpperCase('tr-TR');
+  const meta=[fmtShort(r.date), up(r.category)];
+  if(r.pay&&r.pay!=='Diğer')meta.push(up(r.pay));
   if(r.items.length)meta.push(r.items.length+' KLM');
   return `<div class="receipt-card slip" onclick="showDetail(${r.id})" style="animation-delay:${Math.min(i||0,8)*38}ms">
     <div class="receipt-top">
       <div class="receipt-store">${hl(esc(r.store),q)}</div>
       <div class="receipt-amount">${money(r.total)}</div>
     </div>
-    <div class="receipt-meta">${meta.map(m=>`<span class="receipt-tag">${esc(m)}</span>`).join('')}</div>
+    <div class="receipt-meta">${r.grp?`<span class="receipt-tag led" style="color:${ledColor(r.grp)}">${ledIcon(r.grp)} ${esc(up(r.grp))}</span>`:''}${meta.map(m=>`<span class="receipt-tag">${esc(m)}</span>`).join('')}</div>
   </div>`;
 }
 
+let ledFilter='all';
+function setLedFilter(i){ ledFilter=ledgerByIndex(i); renderReceipts(); }
+
 function renderReceipts(){
-  const list=getReceipts();
-  document.getElementById('receiptCount').textContent=list.length+' kayıt';
+  const all=getReceipts(), list=byLedger(all,ledFilter);
+  const row=document.getElementById('ledRow');
+  if(row)row.innerHTML=all.length?ledgerChips(all,ledFilter,'setLedFilter'):'';
+  const sum=list.reduce((s,r)=>s+r.total,0);
+  document.getElementById('receiptCount').textContent=
+    list.length+' kayıt'+(list.length?' · '+money(sum):'');
   document.getElementById('receiptsList').innerHTML = list.length
     ? list.map((r,i)=>card(r,'',i)).join('')
-    : '<div class="empty-state"><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-2-1.4L14 21l-2-1.4L10 21l-2-1.4L6 21z"/><path d="M9.5 9h5M9.5 13h5"/></svg>Henüz fiş yok.<br>Tara sekmesinden ilkini ekle.</div>';
+    : (all.length
+        ? '<div class="empty-state"><div class="empty-icon">📁</div>Bu defterde fiş yok.</div>'
+        : '<div class="empty-state"><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-2-1.4L14 21l-2-1.4L10 21l-2-1.4L6 21z"/><path d="M9.5 9h5M9.5 13h5"/></svg>Henüz fiş yok.<br>Tara sekmesinden ilkini ekle.</div>');
 }
-let filter='all', payFilter='all';
+let filter='all', payFilter='all', searchLed='all';
+function setSearchLed(i){ searchLed=ledgerByIndex(i); doSearch(); }
 function setFilter(f,el){
   filter=f;
   document.querySelectorAll('#filterRow .filter-chip').forEach(c=>c.classList.remove('active'));
@@ -1835,12 +2002,17 @@ function setPayFilter(f,el){
 }
 function doSearch(){
   const q=(document.getElementById('searchInput').value||'').toLowerCase().trim();
-  let list=getReceipts();
+  const all=getReceipts();
+  let list=all;
+  const lrow=document.getElementById('ledFilterRow');
+  if(lrow)lrow.innerHTML=all.length?ledgerChips(all,searchLed,'setSearchLed'):'';
+  list=byLedger(list,searchLed);
   if(filter!=='all')list=list.filter(r=>r.category===filter);
   if(payFilter!=='all')list=list.filter(r=>(r.pay||'Diğer')===payFilter);
   if(q)list=list.filter(r=>
     r.store.toLowerCase().includes(q)||
     r.category.toLowerCase().includes(q)||
+    (r.grp||'').toLowerCase().includes(q)||
     (r.notes||'').toLowerCase().includes(q)||
     (r.items||[]).some(i=>i.name.toLowerCase().includes(q))
   );
@@ -1862,6 +2034,7 @@ function showDetail(id){
         <div class="badges">
           <span class="category-badge" style="background:${c}1a;color:${c}">${catIcon(r.category)} ${r.category}</span>
           ${r.pay&&r.pay!=='Diğer'?`<span class="category-badge" style="background:${PAY_COLOR[r.pay]}1a;color:${PAY_COLOR[r.pay]}">${r.pay}</span>`:''}
+          ${r.grp?`<span class="category-badge" style="background:${ledColor(r.grp)}1a;color:${ledColor(r.grp)}">${ledIcon(r.grp)} ${esc(r.grp)}</span>`:''}
         </div>
       </div>
       <div class="r-total"><span class="lbl">Toplam</span><b>${money(r.total)}</b></div>
@@ -1870,6 +2043,11 @@ function showDetail(id){
     ${r.items.length?`<div class="lbl" style="margin:10px 0 4px">Ürünler</div>
       ${r.items.map(i=>`<div class="item-row"><span class="item-name">${esc(i.name)}</span>${i.qty>1?`<span class="item-qty">×${i.qty}</span>`:''}<span class="item-price">${money(i.price)}</span></div>`).join('')}`:''}
     ${r.notes?`<div class="note">${esc(r.notes)}</div>`:''}
+    <div class="lbl" style="margin:14px 0 0">Defter</div>
+    <div class="led-pick">
+      ${getLedgers().map((l,i)=>`<div class="filter-chip${r.grp===l.name?' active':''}" onclick="setReceiptLedger(${r.id},${i})">${l.icon||'📁'} ${esc(l.name)}</div>`).join('')}
+      <div class="filter-chip${r.grp?'':' active'}" onclick="setReceiptLedger(${r.id},-2)">Ayrılmamış</div>
+    </div>
     <button class="btn btn-danger" style="margin-top:16px" onclick="delReceipt(${r.id})">Fişi sil</button>`;
   document.getElementById('detailModal').classList.add('show');
 }
@@ -1890,6 +2068,7 @@ function showManualEntry(){
   document.getElementById('mTotal').value='';
   document.getElementById('mCat').value='Gıda';
   document.getElementById('mPay').value='Kredi Kartı';
+  fillLedgerSelect('mGrp',lastLedger());
   document.getElementById('mNotes').value='';
   document.getElementById('manualModal').classList.add('show');
 }
@@ -1899,20 +2078,22 @@ function saveEntry(){
   const total=parseFloat(document.getElementById('mTotal').value);
   const cat=document.getElementById('mCat').value;
   const pay=document.getElementById('mPay').value;
+  const grp=document.getElementById('mGrp').value||'';
   const notes=document.getElementById('mNotes').value.trim();
   if(!store||!date||isNaN(total)){ showToast('⚠️ Mağaza, tarih ve tutar gerekli','error'); return; }
 
   if(editMode&&currentResult){
     currentResult.store=store; currentResult.date=date;
     currentResult.total=total; currentResult.category=cat; currentResult.notes=notes;
-    currentResult.payment=pay;
+    currentResult.payment=pay; currentResult.grp=grp;
     closeModal('manualModal'); showResult(currentResult);
     showToast('✏️ Güncellendi — şimdi kaydedebilirsin');
     editMode=false; return;
   }
   const list=getReceipts();
   const cs=canonicalStore(store);
-  const rec={id:Date.now(),store:cs,skey:storeKey(cs),date,total,category:cat,pay,items:[],notes,savedAt:new Date().toISOString()};
+  rememberLedger(grp);
+  const rec={id:Date.now(),store:cs,skey:storeKey(cs),date,total,category:cat,pay,grp,items:[],notes,savedAt:new Date().toISOString()};
   list.unshift(rec);
   saveReceipts(list);
   closeModal('manualModal');
@@ -1927,8 +2108,8 @@ function backupData(){
   if(!list.length){ showToast('Yedeklenecek fiş yok'); return; }
 
   const withKeys=!!document.getElementById('bkKeys')?.checked;
-  const payload={app:'FişTakip',version:APP.version,schema:3,
-    exportedAt:new Date().toISOString(),receipts:list};
+  const payload={app:'FişTakip',version:APP.version,schema:4,
+    exportedAt:new Date().toISOString(),receipts:list,ledgers:getLedgers()};
 
   const bud=getBudgets();
   if(hasBudgets(bud))payload.budgets=bud;
@@ -1968,6 +2149,11 @@ function restoreData(e){
       migrate(cur); saveReceipts(cur);
 
       let extra='';
+      if(Array.isArray(d.ledgers)&&d.ledgers.length){
+        const cur2=getLedgers(); let addedL=0;
+        d.ledgers.forEach(x=>{ if(x&&x.name&&!cur2.some(y=>y.name===x.name)){ cur2.push(x); addedL++; } });
+        if(addedL){ putLedgers(cur2); extra+=' · '+addedL+' defter eklendi'; }
+      }
       if(d.budgets&&typeof d.budgets==='object'&&hasBudgets(d.budgets)){
         putBudgets(Object.assign(getBudgets(),d.budgets));
         extra=' · bütçeler yüklendi';
@@ -1993,10 +2179,10 @@ async function exportData(){
   if(!window.XLSX)await loadScript('https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js');
 
   const wb=XLSX.utils.book_new();
-  const rows=[['Tarih','Mağaza','Kategori','Ödeme','Toplam (₺)','Ürün Sayısı','Notlar']];
-  list.forEach(r=>rows.push([r.date,r.store,r.category,r.pay||'',+r.total.toFixed(2),r.items.length,r.notes||'']));
+  const rows=[['Tarih','Mağaza','Defter','Kategori','Ödeme','Toplam (₺)','Ürün Sayısı','Notlar']];
+  list.forEach(r=>rows.push([r.date,r.store,r.grp||'Ayrılmamış',r.category,r.pay||'',+r.total.toFixed(2),r.items.length,r.notes||'']));
   const ws1=XLSX.utils.aoa_to_sheet(rows);
-  ws1['!cols']=[{wch:12},{wch:26},{wch:18},{wch:14},{wch:13},{wch:12},{wch:32}];
+  ws1['!cols']=[{wch:12},{wch:26},{wch:16},{wch:18},{wch:14},{wch:13},{wch:12},{wch:32}];
   XLSX.utils.book_append_sheet(wb,ws1,'Tüm Fişler');
 
   // Mağaza özeti
@@ -2007,6 +2193,15 @@ async function exportData(){
     sr.push([k,v.c,+v.t.toFixed(2),+(v.t/v.c).toFixed(2),+(v.t/grandS*100).toFixed(1)]));
   const wsS=XLSX.utils.aoa_to_sheet(sr); wsS['!cols']=[{wch:26},{wch:10},{wch:14},{wch:14},{wch:11}];
   XLSX.utils.book_append_sheet(wb,wsS,'Mağaza Özeti');
+
+  // Defter özeti
+  const lv={}; list.forEach(r=>{const g=r.grp||'Ayrılmamış'; lv[g]=lv[g]||{t:0,c:0}; lv[g].t+=r.total; lv[g].c++;});
+  const lr=[['Defter','Fiş Sayısı','Toplam (₺)','Ortalama (₺)','Oran (%)']];
+  Object.entries(lv).sort((a,b)=>b[1].t-a[1].t).forEach(([k,v])=>
+    lr.push([k,v.c,+v.t.toFixed(2),+(v.t/v.c).toFixed(2),+(v.t/grandS*100).toFixed(1)]));
+  lr.push(['TOPLAM',list.length,+grandS.toFixed(2),+(grandS/(list.length||1)).toFixed(2),100]);
+  const wsL=XLSX.utils.aoa_to_sheet(lr); wsL['!cols']=[{wch:20},{wch:12},{wch:14},{wch:14},{wch:11}];
+  XLSX.utils.book_append_sheet(wb,wsL,'Defter Özeti');
 
   // Ödeme özeti
   const pv={}; list.forEach(r=>{const p=r.pay||'Diğer'; pv[p]=pv[p]||{t:0,c:0}; pv[p].t+=r.total; pv[p].c++;});

@@ -4,6 +4,24 @@ Bu proje [Semantic Versioning](https://semver.org/lang/tr/) kullanır.
 
 ---
 
+## [1.3.0] — 2026-08-25 · *Defter*
+
+### Eklendi
+- **Defterler.** Kategorinin yanına ikinci bir ayrım geldi: bir fiş artık *ne aldığın* (Gıda, Kıyafet…) dışında *hangi bütçeden çıktığıyla* da işaretleniyor — **İşyeri**, **Ev** ya da kendi koyduğun isim.
+  - **Fişler** sekmesinde defter süzgeci; seçili defterin fiş sayısı ve toplam tutarı başlıkta. Fiş kartlarında defter etiketi.
+  - Tarama sonucunda kaydetmeden önce defter seçimi; en son kullanılan defter bir sonraki fişte önseçili gelir. Elle ekleme ve *Düzelt* formunda da alan var.
+  - Kayıtlı bir fişin defteri, fişe dokununca açılan detay penceresindeki çiplerden değiştirilebilir.
+  - **Ara** sekmesinde defter süzgeci; arama metni defter adında da eşleşir.
+  - **Özet**'te defter dağılımı kartı (tutar ve yüzde).
+  - Excel'de *Tüm Fişler* sayfasına **Defter** sütunu ve ayrı bir **Defter Özeti** sayfası.
+  - Ayarlar → **Defterler**: defter ekle, adını/simgesini/rengini değiştir, sil. Ad değişince o defterdeki fişler de taşınır; defter silinince fişler silinmez, *Ayrılmamış* olur.
+  - Defterler yedeğe dahil (`schema: 4`); geri yüklerken eksik defterler eklenir, var olanlar korunur.
+
+### Düzeltildi
+- Fiş kartındaki etiketler Türkçe büyük harfe çevriliyor — `Elektronik` artık `ELEKTRONIK` değil `ELEKTRONİK`.
+
+---
+
 ## [1.2.2] — 2026-08-25
 
 ### Düzeltildi

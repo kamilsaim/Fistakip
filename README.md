@@ -6,7 +6,7 @@
 
 Tek bir HTML dosyası. Kurulum yok, sunucu yok, hesap yok.
 
-[![sürüm](https://img.shields.io/badge/sürüm-1.2.2-1A2320?style=flat-square)](CHANGELOG.md)
+[![sürüm](https://img.shields.io/badge/sürüm-1.3.0-1A2320?style=flat-square)](CHANGELOG.md)
 [![tek dosya](https://img.shields.io/badge/tek_dosya-100_KB-BD2731?style=flat-square)](index.html)
 [![bağımlılık](https://img.shields.io/badge/bağımlılık-yok-1A2320?style=flat-square)](#nasıl-çalışır)
 
@@ -25,12 +25,13 @@ Türk market ve mağaza fişlerini okuyup harcamanı defterler. Fişi tarar, iç
 | 📷 **Fiş okuma** | Dört ayrı motor. Biri tamamen çevrimdışı çalışır. |
 | 🏬 **Mağaza birleştirme** | "LC WAIKIKI" ile "LC Waikiki" tek mağaza sayılır. 40+ Türk markası tanınır. |
 | 🗂 **Otomatik kategori** | Gıda, Ev & Yaşam, Kıyafet, Yakıt, Eczane ve 4 kategori daha. |
+| 📒 **Defterler** | Kategoriden bağımsız ikinci ayrım: İşyeri, Ev ya da kendi koyduğun isim. |
 | 💳 **Ödeme takibi** | Kredi kartı / nakit ayrımı, dağılımıyla birlikte. |
 | 📊 **Aylık seyir** | 6 aylık grafik, geçen aya kıyas, mağaza ve kategori dökümü. |
 | 🎯 **Kategori bütçesi** | Aylık üst sınır koy; %80'de uyarır, aşınca fiş kaydederken haber verir. |
 | 📈 **Ürün fiyat takibi** | Aynı ürünün birim fiyatı zaman içinde nasıl değişti — geçmişi ve eğrisiyle. |
-| 🔍 **Arama** | Mağaza, ürün adı, kategori ve ödeme şeklinde filtreleme. |
-| 📗 **Excel çıktısı** | 6 sayfalı `.xlsx` — fişler, kategori, mağaza, ödeme, aylık özet, ürün fiyatları. |
+| 🔍 **Arama** | Mağaza, ürün adı, kategori, defter ve ödeme şeklinde filtreleme. |
+| 📗 **Excel çıktısı** | 7 sayfalı `.xlsx` — fişler, defter, kategori, mağaza, ödeme, aylık özet, ürün fiyatları. |
 | 💾 **Yedekleme** | JSON al-ver. Cihaz değiştirince veri taşınır. |
 | 🌙 **Karanlık mod** | Telefonun ayarına göre kendiliğinden. |
 
@@ -87,6 +88,16 @@ Tesseract.js tarayıcıda çalışır — fotoğraf hiçbir sunucuya gitmez. Ön
 **Fiyat seyri.** Aynı ürünü ikinci kez alınca listede çıkar. Karşılaştırma **birim fiyat** üzerinden yapılır (satır tutarı ÷ adet), yani 4'lü aldığın sütle tek aldığın süt aynı ölçekte. Satırda kaç kez alındığı, en düşük–en yüksek aralık, ilk alıştan bugüne değişim ve minik fiyat eğrisi durur; dokununca hangi tarihte hangi mağazada kaça aldığın ve önceki alışa göre kaç lira fark ettiği açılır.
 
 Ürün adları eşleştirilirken gramaj ve adet ekleri temizlenir — `SÜT 1 LT`, `Süt 1lt` ve `süt  1 LT` tek üründür. Bu yüzden farklı gramajlar da aynı sayılabilir; ayrıştırıcı ürün satırı çıkarmayan bir fişte (ör. akaryakıt) fiyat takibi olmaz.
+
+---
+
+## Defterler
+
+Kategori **ne aldığını** söyler, defter **hangi bütçeden** çıktığını. Aynı market fişi kategori olarak Gıda kalır ama İşyeri ya da Ev defterine gider; ikisi birbirine karışmaz.
+
+Kutudan iki defter çıkar — **İşyeri** ve **Ev**. Ayarlar → *Defterler*'den adını, simgesini ve rengini değiştirebilir, yenisini ekleyebilirsin (Araba, Yazlık, Ortak kasa…). Bir defterin adını değiştirince o defterdeki fişler de taşınır; sildiğinde fişler silinmez, *Ayrılmamış* olur.
+
+Fişi tararken kaydetmeden önce defterini seçersin; en son kullandığın defter bir sonraki fişte hazır gelir. Sonradan değiştirmek için fişe dokunup alttaki defter çiplerinden birini seç. **Fişler** sekmesinde deftere göre süzer, seçili defterin fiş sayısını ve toplamını başlıkta görürsün; **Özet**'te defterlerin ayrı ayrı dağılımı, Excel'de ayrı bir *Defter Özeti* sayfası çıkar.
 
 ---
 
@@ -153,6 +164,7 @@ Logo ailesi ve kullanım kuralları: [`logo-kilavuz.html`](logo-kilavuz.html)
 
 - [x] Ürün fiyat takibi — aynı ürünün zaman içindeki fiyat değişimi *(v1.2.0)*
 - [x] Kategori bazlı aylık bütçe ve limit uyarısı *(v1.2.0)*
+- [x] Defterler — iş / ev gibi ikinci bir ayrım *(v1.3.0)*
 - [ ] Taksitli alışveriş takibi
 - [ ] Fiş fotoğrafının kayda iliştirilmesi
 - [ ] Çoklu cihaz eşitleme (isteğe bağlı, kendi sunucunla)
