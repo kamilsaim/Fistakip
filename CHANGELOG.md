@@ -4,6 +4,18 @@ Bu proje [Semantic Versioning](https://semver.org/lang/tr/) kullanır.
 
 ---
 
+## [1.4.0] — 2026-08-26 · *Ayıklama*
+
+### Eklendi
+- **Fişten ürün satırı çıkarma.** Sana ait olmayan (arkadaşına aldığın, iade ettiğin, başka deftere yazılması gereken) satırı fişten çıkarabilirsin — **tutarı fişin toplamından düşülür**, harcamana yazılmaz.
+  - Ürün satırının sağındaki **✕** ile çıkarılır; satır *Çıkarılanlar* listesine düşer ve **↺** ile geri alınır. Hepsi geri alınırsa fiş ilk haline döner.
+  - Hem tarama sonucunda (kaydetmeden önce) hem de kayıtlı bir fişin detay penceresinde çalışır; kayıtlı fişte değişiklik anında saklanır, listeler ve Özet tazelenir.
+  - Fişin kendi toplamı korunur (`gross`) ve altta gösterilir: *Fiş toplamı ₺300,00 · 2 satır çıkarıldı −₺200,00 · kalan ₺100,00*.
+  - Excel'deki *Tüm Fişler* sayfasına **Fiş Toplamı (₺)** ve **Çıkarılan (₺)** sütunları eklendi.
+  - Çıkarılan satırlar fişle birlikte yedeklenir; Özet, bütçe uyarıları ve fiyat takibi kalan tutar/satırlarla çalışır.
+
+---
+
 ## [1.3.0] — 2026-08-25 · *Defter*
 
 ### Eklendi

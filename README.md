@@ -6,7 +6,7 @@
 
 Tek bir HTML dosyası. Kurulum yok, sunucu yok, hesap yok.
 
-[![sürüm](https://img.shields.io/badge/sürüm-1.3.0-1A2320?style=flat-square)](CHANGELOG.md)
+[![sürüm](https://img.shields.io/badge/sürüm-1.4.0-1A2320?style=flat-square)](CHANGELOG.md)
 [![tek dosya](https://img.shields.io/badge/tek_dosya-100_KB-BD2731?style=flat-square)](index.html)
 [![bağımlılık](https://img.shields.io/badge/bağımlılık-yok-1A2320?style=flat-square)](#nasıl-çalışır)
 
@@ -26,12 +26,13 @@ Türk market ve mağaza fişlerini okuyup harcamanı defterler. Fişi tarar, iç
 | 🏬 **Mağaza birleştirme** | "LC WAIKIKI" ile "LC Waikiki" tek mağaza sayılır. 40+ Türk markası tanınır. |
 | 🗂 **Otomatik kategori** | Gıda, Ev & Yaşam, Kıyafet, Yakıt, Eczane ve 4 kategori daha. |
 | 📒 **Defterler** | Kategoriden bağımsız ikinci ayrım: İşyeri, Ev ya da kendi koyduğun isim. |
+| ✂️ **Satır ayıklama** | Sana ait olmayan ürünü fişten çıkar; tutarı toplamdan düşülür, geri alınabilir. |
 | 💳 **Ödeme takibi** | Kredi kartı / nakit ayrımı, dağılımıyla birlikte. |
 | 📊 **Aylık seyir** | 6 aylık grafik, geçen aya kıyas, mağaza ve kategori dökümü. |
 | 🎯 **Kategori bütçesi** | Aylık üst sınır koy; %80'de uyarır, aşınca fiş kaydederken haber verir. |
 | 📈 **Ürün fiyat takibi** | Aynı ürünün birim fiyatı zaman içinde nasıl değişti — geçmişi ve eğrisiyle. |
 | 🔍 **Arama** | Mağaza, ürün adı, kategori, defter ve ödeme şeklinde filtreleme. |
-| 📗 **Excel çıktısı** | 7 sayfalı `.xlsx` — fişler, defter, kategori, mağaza, ödeme, aylık özet, ürün fiyatları. |
+| 📗 **Excel çıktısı** | 7 sayfalı `.xlsx` — fişler, defter, kategori, mağaza, ödeme, aylık özet, ürün fiyatları. Fiş toplamı ve çıkarılan tutar ayrı sütunlarda. |
 | 💾 **Yedekleme** | JSON al-ver. Cihaz değiştirince veri taşınır. |
 | 🌙 **Karanlık mod** | Telefonun ayarına göre kendiliğinden. |
 
@@ -101,6 +102,16 @@ Fişi tararken kaydetmeden önce defterini seçersin; en son kullandığın deft
 
 ---
 
+## Satır ayıklama
+
+Bir fişteki her ürün sana ait olmayabilir — arkadaşına aldığın, iade ettiğin ya da işyerine yazılması gereken satırlar. Ürün satırının sağındaki **✕** ile satırı çıkarırsın: satır *Çıkarılanlar*'a düşer ve **tutarı fişin toplamından düşülür**, yani harcamana yazılmaz.
+
+Ayıklama hem tarama sonucunda (kaydetmeden önce) hem de kayıtlı bir fişe dokununca açılan detay penceresinde çalışır. Çıkarılan satırın yanındaki **↺** ile geri alırsın; hepsini geri alırsan fiş ilk haline döner.
+
+Fişin kendi toplamı kaybolmaz: altta `Fiş toplamı ₺300,00 · 2 satır çıkarıldı −₺200,00 · kalan ₺100,00` satırı durur, Excel'de de *Fiş Toplamı* ve *Çıkarılan* ayrı sütunlardır. Özet, bütçe ve fiyat takibi kalan tutarla çalışır.
+
+---
+
 ## Gizlilik
 
 - **Fişler cihazdan çıkmaz.** Hepsi tarayıcının `localStorage`'ında durur. Sunucu yok, hesap yok, analitik yok.
@@ -165,6 +176,7 @@ Logo ailesi ve kullanım kuralları: [`logo-kilavuz.html`](logo-kilavuz.html)
 - [x] Ürün fiyat takibi — aynı ürünün zaman içindeki fiyat değişimi *(v1.2.0)*
 - [x] Kategori bazlı aylık bütçe ve limit uyarısı *(v1.2.0)*
 - [x] Defterler — iş / ev gibi ikinci bir ayrım *(v1.3.0)*
+- [x] Fişten ürün satırı çıkarma — tutarı toplamdan düşerek *(v1.4.0)*
 - [ ] Taksitli alışveriş takibi
 - [ ] Fiş fotoğrafının kayda iliştirilmesi
 - [ ] Çoklu cihaz eşitleme (isteğe bağlı, kendi sunucunla)
