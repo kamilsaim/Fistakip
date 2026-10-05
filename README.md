@@ -6,8 +6,8 @@
 
 Tek bir HTML dosyası. Kurulum yok, sunucu yok, hesap yok.
 
-[![sürüm](https://img.shields.io/badge/sürüm-1.4.0-1A2320?style=flat-square)](CHANGELOG.md)
-[![tek dosya](https://img.shields.io/badge/tek_dosya-100_KB-BD2731?style=flat-square)](index.html)
+[![sürüm](https://img.shields.io/badge/sürüm-1.4.1-1A2320?style=flat-square)](CHANGELOG.md)
+[![tek dosya](https://img.shields.io/badge/tek_dosya-125_KB-BD2731?style=flat-square)](index.html)
 [![bağımlılık](https://img.shields.io/badge/bağımlılık-yok-1A2320?style=flat-square)](#nasıl-çalışır)
 
 [Canlı dene](https://kamilsaim.github.io/Fistakip/) · [Başla](#kullanmaya-başla) · [Okuma motorları](#okuma-motorları) · [Bütçe & fiyat](#bütçe-ve-fiyat-takibi) · [Gizlilik](#gizlilik)
@@ -24,19 +24,20 @@ Türk market ve mağaza fişlerini okuyup harcamanı defterler. Fişi tarar, iç
 |---|---|
 | 📷 **Fiş okuma** | Dört ayrı motor. Biri cihazda çalışır, fiş verisi dışarı çıkmaz. |
 | 🏬 **Mağaza birleştirme** | "LC WAIKIKI" ile "LC Waikiki" tek mağaza sayılır. 40+ Türk markası tanınır. |
-| 🗂 **Otomatik kategori** | Gıda, Ev & Yaşam, Kıyafet, Yakıt, Eczane ve 4 kategori daha. |
+| 🗂 **Otomatik kategori** | Gıda, Ev & Yaşam, Kıyafet, Yakıt, Eczane ve 4 kategori daha. Yapay zekâ listede olmayan bir kategori uydurursa en yakınına eşlenir. |
 | 📒 **Defterler** | Kategoriden bağımsız ikinci ayrım: İşyeri, Ev ya da kendi koyduğun isim. |
 | ✂️ **Satır ayıklama** | Sana ait olmayan ürünü fişten çıkar; tutarı toplamdan düşülür, geri alınabilir. |
 | 💳 **Ödeme takibi** | Kredi kartı / nakit ayrımı, dağılımıyla birlikte. |
 | 📊 **Aylık seyir** | 6 aylık grafik, geçen aya kıyas, mağaza ve kategori dökümü. |
 | 🎯 **Kategori bütçesi** | Aylık üst sınır koy; %80'de uyarır, aşınca fiş kaydederken haber verir. |
 | 📈 **Ürün fiyat takibi** | Aynı ürünün birim fiyatı zaman içinde nasıl değişti — geçmişi ve eğrisiyle. |
-| 🔍 **Arama** | Mağaza, ürün adı, kategori, defter ve ödeme şeklinde filtreleme. |
+| 🔍 **Arama** | Mağaza, ürün adı, kategori, defter ve ödeme şeklinde filtreleme. Türkçe karakterden bağımsız — `bim` yazınca BİM bulunur. |
 | 📗 **Excel çıktısı** | 7 sayfalı `.xlsx` — fişler, defter, kategori, mağaza, ödeme, aylık özet, ürün fiyatları. Fiş toplamı ve çıkarılan tutar ayrı sütunlarda. |
 | 💾 **Yedekleme** | JSON al-ver. Cihaz değiştirince veri taşınır. |
+| 📴 **Çevrimdışı açılış** | Web sürümü bir kez açıldıktan sonra internet yokken de son kopyadan açılır. |
 | 🌙 **Karanlık mod** | Telefonun ayarına göre kendiliğinden. |
 
-Fiş okunamazsa elle de girebilirsin; yanlış okunan alanı kaydetmeden düzeltirsin.
+Fiş okunamazsa elle de girebilirsin; yanlış okunan alanı kaydetmeden *Düzelt* ile, kaydettikten sonra fişe dokunup *Düzenle* ile değiştirirsin. Yanlış fotoğraf seçtiysen *Başka fotoğraf seç* ile baştan alırsın.
 
 ---
 
@@ -62,6 +63,8 @@ Ayarlar ⚙️ menüsünden seçilir. Anahtarlar **kodun içine değil, cihazın
 **Gemini önerilir** — ücretsiz katmanı var, kredi kartı istemez, fişi yalnız okumakla kalmaz anlar da.
 
 Gemini'de model erişimi hesaba göre değişir. Uygulama `404` alırsa anahtarının erişebildiği modelleri kendisi listeler, uygun olanı seçer ve kaydeder. Ayarlardan elle de seçebilirsin.
+
+Claude'da Haiku 4.5 (varsayılan, fiş için yeterli) ya da Sonnet 5.5 seçilir. Gemini ve Claude'a fotoğraf ~3,5 MB JPEG'e küçültülerek gider; sunucu yoğunsa (`503`/`529`) uygulama birkaç kez kendiliğinden tekrar dener.
 
 <details>
 <summary><b>Yerel OCR nasıl çalışıyor?</b></summary>
@@ -130,12 +133,12 @@ Tek bir `index.html`. Derleme aracı, paket yöneticisi, `node_modules` yok. Kü
 
 | Kütüphane | Ne zaman iner | Ne için |
 |---|---|---|
-| Tesseract.js | Yerel OCR ilk kullanımda | Çevrimdışı metin okuma |
+| Tesseract.js | Yerel OCR ilk kullanımda | Cihazda metin okuma |
 | SheetJS | Excel çıktısı alınırken | `.xlsx` üretimi |
 
 Uygulama açılırken hiçbiri inmez.
 
-Yanında duran diğer dosyalar yalnızca kimlik içindir: ana ekran ikonu (`icon-512.png`), `manifest.webmanifest` ve logo varyantları. Uygulama mantığının tamamı `index.html` içinde.
+Yanında duran diğer dosyalar: ana ekran ikonu (`icon-512.png`), `manifest.webmanifest`, logo varyantları ve `sw.js` — web sürümünü çevrimdışı açan küçük bir service worker (ağ önce çalışır, güncellemeyi geciktirmez; API çağrılarını önbelleğe almaz, APK'da devre dışı). Uygulama mantığının tamamı `index.html` içinde.
 
 ---
 
@@ -177,6 +180,7 @@ Logo ailesi ve kullanım kuralları: [`logo-kilavuz.html`](logo-kilavuz.html)
 - [x] Kategori bazlı aylık bütçe ve limit uyarısı *(v1.2.0)*
 - [x] Defterler — iş / ev gibi ikinci bir ayrım *(v1.3.0)*
 - [x] Fişten ürün satırı çıkarma — tutarı toplamdan düşerek *(v1.4.0)*
+- [x] Kayıtlı fişi düzenleme, çevrimdışı açılış *(v1.4.1)*
 - [ ] Taksitli alışveriş takibi
 - [ ] Fiş fotoğrafının kayda iliştirilmesi
 - [ ] Çoklu cihaz eşitleme (isteğe bağlı, kendi sunucunla)
