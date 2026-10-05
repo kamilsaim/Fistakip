@@ -15,3 +15,7 @@ fistakip-yedek-*.json
 # geçici
 *.log
 *.tmp
+
+# derlenmiş uygulama paketleri
+*.apk
+*.aab

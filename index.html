@@ -433,6 +433,7 @@
   /* ═══ BOŞ DURUM ═══ */
   .empty-state{text-align:center;padding:44px 20px;color:var(--ink3);font-size:13.5px;line-height:1.6}
   .empty-state svg{width:38px;height:38px;stroke:var(--rule);fill:none;stroke-width:1.2;margin-bottom:12px}
+  .empty-icon{font-size:28px;margin-bottom:10px;opacity:.55}
 
   /* ═══ TOAST ═══ */
   .toast{
@@ -458,13 +459,10 @@
 <div class="topbar">
   <div class="logo"><svg class="logo-mark" viewBox="0 0 64 64" aria-hidden="true"><path d="M16 12a4 4 0 0 1 4-4h24a4 4 0 0 1 4 4v34l-4 4-4-4-4 4-4-4-4 4-4-4-4 4-4-4z" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linejoin="round"/><path d="M24 21h16M24 28.5h10" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><path d="M24 37h16" stroke="var(--fiscal)" stroke-width="4.4" stroke-linecap="round"/></svg><span class="wm">FişTakip</span></div>
   <div class="topbar-actions">
-    <div class="icon-btn" onclick="showManualEntry()" aria-label="Elle ekle"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></div>
-    <div class="icon-btn" onclick="exportData()">📊</div>
-    <div class="icon-btn" onclick="showSettings()" aria-label="Ayarlar"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.9l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.9-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 11-4 0v-.1A1.7 1.7 0 008.9 19a1.7 1.7 0 00-1.9.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.9 1.7 1.7 0 00-1.5-1H3a2 2 0 110-4h.1A1.7 1.7 0 005 8.9a1.7 1.7 0 00-.3-1.9l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.9.3H9.5a1.7 1.7 0 001-1.5V3a2 2 0 114 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.9-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.9v.1a1.7 1.7 0 001.5 1H21a2 2 0 110 4h-.1a1.7 1.7 0 00-1.5 1z"/></svg></div>
+    <div class="icon-btn" onclick="showManualEntry()" aria-label="Elle ekle" title="Elle ekle"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></div>
+    <div class="icon-btn" onclick="exportData()" aria-label="Excel'e aktar" title="Excel'e aktar">📊</div>
+    <div class="icon-btn" onclick="showSettings()" aria-label="Ayarlar" title="Ayarlar"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.9l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.9-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 11-4 0v-.1A1.7 1.7 0 008.9 19a1.7 1.7 0 00-1.9.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.9 1.7 1.7 0 00-1.5-1H3a2 2 0 110-4h.1A1.7 1.7 0 005 8.9a1.7 1.7 0 00-.3-1.9l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.9.3H9.5a1.7 1.7 0 001-1.5V3a2 2 0 114 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.9-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.9v.1a1.7 1.7 0 001.5 1H21a2 2 0 110 4h-.1a1.7 1.7 0 00-1.5 1z"/></svg></div>
   </div>
-</div>
-
-
 </div>
 
 <!-- SCAN -->
@@ -492,6 +490,7 @@
   </div>
 
   <button class="btn btn-primary" id="analyzeBtn" onclick="analyzeReceipt()" disabled>Fişi oku</button>
+  <button class="btn btn-outline" id="changeBtn" style="display:none" onclick="resetScan()">Başka fotoğraf seç</button>
 
   <div class="result-card slip" id="resultCard">
     <div class="r-head">
@@ -587,6 +586,7 @@
     <div class="filter-chip" onclick="setFilter('Ev & Yaşam',this)">🏠 Ev & Yaşam</div>
     <div class="filter-chip" onclick="setFilter('Kıyafet',this)">👕 Kıyafet</div>
     <div class="filter-chip" onclick="setFilter('Elektronik',this)">📱 Elektronik</div>
+    <div class="filter-chip" onclick="setFilter('Kozmetik',this)">💄 Kozmetik</div>
     <div class="filter-chip" onclick="setFilter('Restoran & Kafe',this)">🍽️ Restoran</div>
     <div class="filter-chip" onclick="setFilter('Yakıt',this)">⛽ Yakıt</div>
     <div class="filter-chip" onclick="setFilter('Sağlık & Eczane',this)">💊 Sağlık</div>
@@ -596,6 +596,7 @@
     <div class="filter-chip active" onclick="setPayFilter('all',this)">Tüm ödemeler</div>
     <div class="filter-chip" onclick="setPayFilter('Kredi Kartı',this)">💳 Kredi Kartı</div>
     <div class="filter-chip" onclick="setPayFilter('Nakit',this)">💵 Nakit</div>
+    <div class="filter-chip" onclick="setPayFilter('Diğer',this)">❓ Diğer</div>
   </div>
   <div class="filter-row" id="ledFilterRow"></div>
   <div class="receipts-list" id="searchResults"></div>
@@ -619,7 +620,7 @@
     <div class="form-group"><label class="form-label">Mağaza / Firma</label><input class="form-input" id="mStore" placeholder="Örn: Migros"></div>
     <div class="form-row">
       <div class="form-group"><label class="form-label">Tarih</label><input class="form-input" id="mDate" type="date"></div>
-      <div class="form-group"><label class="form-label">Tutar (₺)</label><input class="form-input" id="mTotal" type="number" step="0.01" inputmode="decimal" placeholder="0.00"></div>
+      <div class="form-group"><label class="form-label">Tutar (₺)</label><input class="form-input" id="mTotal" type="text" inputmode="decimal" autocomplete="off" placeholder="0,00"></div>
     </div>
     <div class="form-row">
       <div class="form-group"><label class="form-label">Kategori</label>
@@ -673,7 +674,7 @@
 
     <div class="engine-opt" onclick="pickEngine('local')" id="eng-local">
       <div class="engine-head"><b>📴 Yerel OCR</b><span class="engine-tag">Ücretsiz</span></div>
-      <div class="engine-desc">Telefonda çalışır, internet gerekmez, veri dışarı çıkmaz. Doğruluk orta seviye.</div>
+      <div class="engine-desc">Telefonda çalışır, fiş verisi dışarı çıkmaz. İlk kullanımda okuma motoru ve Türkçe dil paketi bir kez internetten indirilir. Doğruluk orta seviye.</div>
     </div>
 
     <div class="engine-opt" onclick="pickEngine('gemini')" id="eng-gemini">
@@ -683,7 +684,7 @@
         <input class="form-input" id="geminiKey" placeholder="Gemini API anahtarı (AIza…)" autocomplete="off">
         <button class="btn btn-outline" style="padding:9px;font-size:12.5px;margin-top:8px" onclick="event.stopPropagation();fetchGeminiModels()">🔄 Modelleri Getir</button>
         <select class="form-select" id="geminiModel" style="margin-top:8px;display:none"></select>
-        <div id="geminiModelInfo" style="font-size:11px;color:var(--text3);margin-top:6px"></div>
+        <div id="geminiModelInfo" style="font-size:11px;color:var(--ink3);margin-top:6px"></div>
         <a class="key-link" href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">🔑 Ücretsiz anahtar al →</a>
       </div>
     </div>
@@ -704,7 +705,7 @@
         <input class="form-input" id="claudeKey" placeholder="Claude API anahtarı (sk-ant-…)" autocomplete="off">
         <select class="form-select" id="claudeModel" style="margin-top:8px">
           <option value="claude-haiku-4-5-20251001">Haiku 4.5 — ucuz, fiş için yeterli</option>
-          <option value="claude-sonnet-5">Sonnet 5 — daha güçlü, ~2x maliyet</option>
+          <option value="claude-sonnet-5-5">Sonnet 5.5 — daha güçlü, daha pahalı</option>
         </select>
         <a class="key-link" href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener">🔑 Anahtar oluştur →</a>
       </div>
@@ -761,11 +762,27 @@
 <script>
 /* ══════════════════ SÜRÜM ══════════════════ */
 const APP={
-  version:'1.4.0',
-  released:'2026-08-26',
+  version:'1.4.1',
+  released:'2026-10-05',
   codename:'Ayıklama',
   repo:'https://github.com/kamilsaim/Fistakip'
 };
+
+/* ══════════════════ TARİH ══════════════════ */
+/* Yerel gün (YYYY-MM-DD). toISOString() UTC verir — Türkiye'de gece 00-03 arası dünü yazar. */
+const pad2=n=>String(n).padStart(2,'0');
+const today=()=>{const d=new Date();return d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate());};
+/* AI'dan gelen tarihi doğrula: YYYY-MM-DD ya da GG.AA.YYYY; olmazsa bugün */
+function normDate(s){
+  s=String(s||'').trim();
+  let m=s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+  if(!m){ const t=s.match(/^(\d{1,2})[.\/-](\d{1,2})[.\/-](\d{4})/); if(t)m=[0,t[3],t[2],t[1]]; }
+  if(!m)return today();
+  const y=+m[1], mo=+m[2], d=+m[3];
+  const x=new Date(y,mo-1,d);
+  if(x.getFullYear()!==y||x.getMonth()!==mo-1||x.getDate()!==d)return today();
+  return y+'-'+pad2(mo)+'-'+pad2(d);
+}
 
 /* ══════════════════ STORAGE ══════════════════ */
 const KEY='fistakip_v2';
@@ -773,6 +790,8 @@ const saveReceipts=l=>localStorage.setItem(KEY,JSON.stringify(l));
 function getReceipts(){
   let l=[];
   try{ l=JSON.parse(localStorage.getItem(KEY)||'[]'); }catch{ return []; }
+  if(!Array.isArray(l))return [];
+  l=l.filter(r=>r&&typeof r==='object');
   if(typeof migrate==='function' && migrate(l)) saveReceipts(l);
   return l;
 }
@@ -889,7 +908,7 @@ function ledgerChips(all,active,fn){
   const cnt=n=>all.filter(r=>(r.grp||NO_LED)===n).length;
   const chip=(on,i,label)=>`<div class="filter-chip${on?' active':''}" onclick="${fn}(${i})">${label}</div>`;
   let h=chip(active==='all',-1,'Tüm defterler · '+all.length);
-  getLedgers().forEach((l,i)=>{ h+=chip(active===l.name,i,`${l.icon||'📁'} ${esc(l.name)} · ${cnt(l.name)}`); });
+  getLedgers().forEach((l,i)=>{ h+=chip(active===l.name,i,`${esc(l.icon||'📁')} ${esc(l.name)} · ${cnt(l.name)}`); });
   const none=cnt(NO_LED);
   if(none)h+=chip(active===NO_LED,-2,'Ayrılmamış · '+none);
   return h;
@@ -900,7 +919,7 @@ const ledgerByIndex=i=>i===-1?'all':i===-2?NO_LED:((getLedgers()[i]||{}).name||'
 function fillLedgerSelect(id,val){
   const el=document.getElementById(id); if(!el)return;
   el.innerHTML='<option value="">— Ayrılmamış —</option>'+
-    getLedgers().map(l=>`<option value="${esc(l.name)}">${l.icon||'📁'} ${esc(l.name)}</option>`).join('');
+    getLedgers().map(l=>`<option value="${esc(l.name)}">${esc(l.icon||'📁')} ${esc(l.name)}</option>`).join('');
   el.value=getLedgers().some(l=>l.name===val)?val:'';
 }
 
@@ -984,7 +1003,7 @@ function switchTab(t){
 }
 
 /* ══════════════════ FILE ══════════════════ */
-let currentImage=null, currentResult=null, editMode=false;
+let currentImage=null, currentResult=null, editMode=false, editId=null;   /* editId: düzenlenen kayıtlı fiş */
 
 function handleFile(e){
   const f=e.target.files[0]; if(!f)return;
@@ -995,6 +1014,8 @@ function handleFile(e){
     document.getElementById('previewArea').style.display='block';
     document.getElementById('uploadArea').style.display='none';
     document.getElementById('analyzeBtn').disabled=false;
+    document.getElementById('changeBtn').style.display='block';
+    document.getElementById('changeBtn').disabled=false;
     document.getElementById('resultCard').classList.remove('show');
   };
   r.readAsDataURL(f);
@@ -1029,6 +1050,7 @@ function preprocess(dataUrl){
       ctx.putImageData(d,0,0);
       res(c.toDataURL('image/png'));
     };
+    img.onerror=()=>res(dataUrl);     /* çözülemeyen biçim: olduğu gibi gönder */
     img.src=dataUrl;
   });
 }
@@ -1036,8 +1058,11 @@ function preprocess(dataUrl){
 /* ══════════════════ OCR ══════════════════ */
 function loadScript(src){
   return new Promise((res,rej)=>{
-    if([...document.scripts].some(s=>s.src===src))return res();
-    const s=document.createElement('script'); s.src=src; s.onload=res; s.onerror=rej;
+    if([...document.scripts].some(s=>s.src===src&&s.dataset.ok))return res();
+    [...document.scripts].filter(s=>s.src===src).forEach(s=>s.remove());   /* önceki başarısız deneme */
+    const s=document.createElement('script'); s.src=src;
+    s.onload=()=>{ s.dataset.ok='1'; res(); };
+    s.onerror=()=>{ s.remove(); rej(new Error('Kütüphane indirilemedi. İnternet bağlantını kontrol et.')); };
     document.head.appendChild(s);
   });
 }
@@ -1049,7 +1074,7 @@ function setProgress(pct,txt){
 
 /* ---- Geçici sunucu hatalarında tekrar deneme ----
    Gemini yoğunken 503 "model overloaded" döner; birkaç saniye sonra genelde geçer. */
-const RETRY_STATUS=[500,502,503,504];
+const RETRY_STATUS=[500,502,503,504,529];   /* 529: Anthropic "overloaded" */
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 
 function retryWaitMs(res,attempt,base){
@@ -1080,6 +1105,7 @@ async function fetchRetry(doFetch,{tries=4,base=1200,onRetry}={}){
 async function analyzeReceipt(){
   if(!currentImage)return;
   document.getElementById('analyzeBtn').disabled=true;
+  document.getElementById('changeBtn').disabled=true;
   document.getElementById('resultCard').classList.remove('show');
   document.getElementById('progressWrap').classList.add('show');
   document.getElementById('previewArea').classList.add('busy');
@@ -1096,12 +1122,14 @@ async function analyzeReceipt(){
     showResult(parsed);
     setProgress(100,'Tamam!');
     document.getElementById('previewArea').classList.remove('busy');
+    document.getElementById('changeBtn').style.display='none';   /* sonuç kartında "Yeni fiş" var */
     setTimeout(()=>document.getElementById('progressWrap').classList.remove('show'),600);
   }catch(err){
     document.getElementById('progressWrap').classList.remove('show');
     document.getElementById('previewArea').classList.remove('busy');
     showToast(err.message||'Okuma başarısız','error');
     document.getElementById('analyzeBtn').disabled=false;
+    document.getElementById('changeBtn').disabled=false;
   }
 }
 
@@ -1111,14 +1139,20 @@ async function readWithTesseract(){
   if(!window.Tesseract)await loadScript('https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/5.1.0/tesseract.min.js');
   setProgress(15,'Görüntü iyileştiriliyor…');
   const clean=await preprocess(currentImage);
-  setProgress(25,'Metin okunuyor…');
-  const {data}=await Tesseract.recognize(clean,'tur+eng',{
+  setProgress(20,'Dil paketi hazırlanıyor…');
+  /* PSM gibi parametreler recognize() seçeneklerinde yok sayılır — worker üzerinden verilmeli */
+  const worker=await Tesseract.createWorker('tur+eng',1,{
     logger:m=>{
       if(m.status==='recognizing text')setProgress(25+Math.round(m.progress*70),'Metin okunuyor… %'+Math.round(m.progress*100));
       else if(m.status==='loading language traineddata')setProgress(20,'Dil paketi indiriliyor…');
-    },
-    tessedit_pageseg_mode:'6'
+    }
   });
+  let data;
+  try{
+    await worker.setParameters({tessedit_pageseg_mode:'6'});   /* tek düz metin bloğu — fiş düzeni */
+    setProgress(25,'Metin okunuyor…');
+    ({data}=await worker.recognize(clean));
+  }finally{ worker.terminate(); }
   setProgress(98,'Ayrıştırılıyor…');
   const p=parseReceipt(data.text); p.raw=data.text; p.engine='Yerel OCR';
   return p;
@@ -1170,10 +1204,17 @@ async function pickGeminiModel(key,exclude=[]){
   return models.sort((a,b)=>rankGeminiModel(b)-rankGeminiModel(a))[0];
 }
 
+/* AI motorlarına gidecek görsel: telefon fotoğrafı 5-10 MB olabilir.
+   Claude 5 MB üstünü reddeder; Gemini'de de yükleme gereksiz uzar. ~3,5 MB JPEG'e indir. */
+async function aiImage(){
+  const small=await shrink(currentImage,3500000);
+  return {b64:small.split(',')[1], mime:(small.match(/data:(.*?);/)||[])[1]||'image/jpeg'};
+}
+
 /* ---- 2) GEMINI (okuma + anlama tek adımda) ---- */
 async function readWithGemini(key){
-  const b64=currentImage.split(',')[1];
-  const mime=(currentImage.match(/data:(.*?);/)||[])[1]||'image/jpeg';
+  setProgress(20,'Görüntü hazırlanıyor…');
+  const {b64,mime}=await aiImage();
   const cfg=getSettings();
   let model=cfg.geminiModel||'gemini-flash-latest';
 
@@ -1240,11 +1281,16 @@ async function readWithGemini(key){
 
 /* ---- 3) CLAUDE ---- */
 async function readWithClaude(key,model){
+  setProgress(15,'Görüntü hazırlanıyor…');
+  const {b64,mime}=await aiImage();
   setProgress(20,'Claude\'a gönderiliyor…');
-  const b64=currentImage.split(',')[1];
-  const mime=(currentImage.match(/data:(.*?);/)||[])[1]||'image/jpeg';
 
-  const res=await fetch('https://api.anthropic.com/v1/messages',{
+  const busyNote=({attempt,tries,wait})=>
+    setProgress(30+attempt*10,'Claude yoğun, '+Math.round(wait/1000)+' sn sonra tekrar denenecek ('+attempt+'/'+(tries-1)+')…');
+
+  let res;
+  try{
+    res=await fetchRetry(()=>fetch('https://api.anthropic.com/v1/messages',{
     method:'POST',
     headers:{
       'Content-Type':'application/json',
@@ -1260,14 +1306,21 @@ async function readWithClaude(key,model){
         {type:'text',text:RECEIPT_PROMPT+'\n\nSadece JSON döndür, başka hiçbir metin yazma.'}
       ]}]
     })
-  });
+    }),{tries:4,base:1500,onRetry:busyNote});
+  }catch(e){
+    throw new Error('Claude\'a ulaşılamadı. İnternet bağlantını kontrol et.');
+  }
 
   if(!res.ok){
+    const t=await res.text().catch(()=>'');
     if(res.status===401)throw new Error('Claude anahtarı geçersiz. Ayarlardan kontrol et.');
     if(res.status===429)throw new Error('Hız sınırı aşıldı, biraz bekle.');
+    if(res.status===529)throw new Error('Claude şu an aşırı yoğun (529). Birkaç dakika sonra tekrar dene.');
+    if(res.status===404||(res.status===400&&/model/i.test(t)&&/not.?found/i.test(t)))
+      throw new Error('Seçili Claude modeli bulunamadı. Ayarlardan başka model seç.');
     if(res.status===400){
-      const t=await res.text();
       if(/credit balance/i.test(t))throw new Error('Kontör bitmiş. Console\'dan bakiye yükle.');
+      if(/image/i.test(t))throw new Error('Görsel Claude\'a uygun değil, başka bir fotoğraf dene.');
     }
     throw new Error('Claude hatası ('+res.status+')');
   }
@@ -1283,15 +1336,21 @@ function jsonToReceipt(txt,engine){
   let j;
   try{ j=JSON.parse(txt.replace(/```json|```/g,'').trim()); }
   catch{ throw new Error(engine+' yanıtı okunamadı'); }
+  if(!j||typeof j!=='object')throw new Error(engine+' yanıtı okunamadı');
   if(j.error)throw new Error('Fiş okunamadı, daha net bir fotoğraf dene');
-  const notes=[j.kdv?`KDV: ₺${(+j.kdv).toFixed(2)}`:'', j.payment?`Ödeme: ${j.payment}`:''].filter(Boolean).join(' · ');
+  /* Model sayıyı "1.250,00" gibi metin olarak da döndürebilir */
+  const num=v=>typeof v==='number'?v:(toNumber(v)||0);
+  const items=(Array.isArray(j.items)?j.items:[]).filter(i=>i&&i.name)
+    .map(i=>({name:String(i.name).slice(0,38),qty:num(i.qty)||1,price:num(i.price)}));
+  const kdv=num(j.kdv), pay=j.payment?String(j.payment):null;
+  const notes=[kdv?`KDV: ₺${kdv.toFixed(2)}`:'', pay?`Ödeme: ${pay}`:''].filter(Boolean).join(' · ');
+  const store=String(j.store||'Bilinmeyen Mağaza');
   return {
-    store:(j.store||'Bilinmeyen Mağaza').slice(0,42),
-    date:j.date||new Date().toISOString().slice(0,10),
-    total:+j.total||0,
-    category:j.category||'Diğer',
-    items:(j.items||[]).filter(i=>i&&i.name).map(i=>({name:String(i.name).slice(0,38),qty:+i.qty||1,price:+i.price||0})),
-    notes, payment:j.payment||null, raw:txt, engine
+    store:store.slice(0,42),
+    date:normDate(j.date),
+    total:num(j.total),
+    category:normCategory(j.category,store+' '+items.map(i=>i.name).join(' ')),
+    items, notes, payment:pay, raw:txt, engine
   };
 }
 
@@ -1332,6 +1391,7 @@ function shrink(dataUrl,maxBytes){
       while(out.length*0.75>maxBytes && q>0.35){ q-=0.12; out=c.toDataURL('image/jpeg',q); }
       res(out);
     };
+    img.onerror=()=>res(dataUrl);     /* çözülemeyen biçim: olduğu gibi gönder */
     img.src=dataUrl;
   });
 }
@@ -1352,7 +1412,7 @@ async function fetchGeminiModels(){
     if(!models.length){ info.textContent='❌ Kullanılabilir model yok.'; return; }
     models.sort((a,b)=>rankGeminiModel(b)-rankGeminiModel(a));
     const saved=getSettings().geminiModel;
-    sel.innerHTML=models.map(m=>`<option value="${m}">${m}</option>`).join('');
+    sel.innerHTML=models.map(m=>`<option value="${esc(m)}">${esc(m)}</option>`).join('');
     sel.value=models.includes(saved)?saved:models[0];
     sel.style.display='block';
     info.textContent='✅ '+models.length+' model bulundu. Önerilen seçildi.';
@@ -1360,9 +1420,13 @@ async function fetchGeminiModels(){
     info.textContent='❌ '+e.message;
   }
 }
+const CLAUDE_MODELS=['claude-haiku-4-5-20251001','claude-sonnet-5-5'];
 function getSettings(){
-  try{ return Object.assign({},DEFAULTS,JSON.parse(localStorage.getItem(SKEY)||'{}')); }
-  catch{ return Object.assign({},DEFAULTS); }
+  let s;
+  try{ s=Object.assign({},DEFAULTS,JSON.parse(localStorage.getItem(SKEY)||'{}')); }
+  catch{ s=Object.assign({},DEFAULTS); }
+  if(!CLAUDE_MODELS.includes(s.claudeModel))s.claudeModel=DEFAULTS.claudeModel;   /* eski/geçersiz model adı */
+  return s;
 }
 let pendingEngine='local';
 function showSettings(){
@@ -1375,7 +1439,7 @@ function showSettings(){
   const sel=document.getElementById('geminiModel');
   const info=document.getElementById('geminiModelInfo');
   if(c.geminiModel){
-    sel.innerHTML=`<option value="${c.geminiModel}">${c.geminiModel}</option>`;
+    sel.innerHTML=`<option value="${esc(c.geminiModel)}">${esc(c.geminiModel)}</option>`;
     sel.style.display='block';
     info.textContent='Kayıtlı model. Değiştirmek için Modelleri Getir.';
   }else{ sel.style.display='none'; info.textContent=''; }
@@ -1450,6 +1514,16 @@ function detectCategory(text){
   return 'Diğer';
 }
 
+/* Listede olmayan kategori (ör. AI "Market" derse) süzgeçlere/bütçeye girmez — eşleştir ya da tahmin et */
+function normCategory(c,hint){
+  const names=CAT_NAMES;
+  if(names.includes(c))return c;
+  const f=deacc(c).replace(/[^a-z]/g,'');
+  const hit=f&&names.find(n=>deacc(n).replace(/[^a-z]/g,'')===f);
+  if(hit)return hit;
+  return detectCategory(String(c||'')+' '+String(hint||''));
+}
+
 function parseReceipt(raw){
   const lines=raw.split('\n').map(l=>l.replace(/\s+/g,' ').trim()).filter(Boolean);
   const upper=lines.map(l=>l.toUpperCase());
@@ -1462,7 +1536,7 @@ function parseReceipt(raw){
     m=l.match(/(\d{1,2})\s*[-.\/]\s*(\d{1,2})\s*[-.\/]\s*(\d{2})(?!\d)/);
     if(m){ date=`20${m[3]}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}`; break; }
   }
-  if(!date)date=new Date().toISOString().slice(0,10);
+  date=date?normDate(date):today();
 
   /* ---- TOPLAM ---- */
   let total=null, totalIdx=-1;
@@ -1565,7 +1639,7 @@ function showResult(r){
   document.getElementById('resDate').textContent=fmtDate(r.date);
   document.getElementById('resTotal').textContent=money(r.total);
   const c=catColor(r.category), pay=normPayment(r.payment,r.notes);
-  let b=`<span class="category-badge" style="background:${c}1a;color:${c}">${catIcon(r.category)} ${r.category}</span>`;
+  let b=`<span class="category-badge" style="background:${c}1a;color:${c}">${catIcon(r.category)} ${esc(r.category)}</span>`;
   if(pay!=='Diğer')b+=`<span class="category-badge" style="background:${PAY_COLOR[pay]}1a;color:${PAY_COLOR[pay]}">${pay}</span>`;
   document.getElementById('resCats').innerHTML=b;
   fillLedgerSelect('resGrp', r.grp!==undefined?r.grp:lastLedger());
@@ -1589,11 +1663,11 @@ function showResult(r){
 
 function editResult(){
   if(!currentResult)return;
-  editMode=true;
+  editMode=true; editId=null;
   document.getElementById('entryTitle').textContent='Fişi düzelt';
   document.getElementById('mStore').value=currentResult.store;
   document.getElementById('mDate').value=currentResult.date;
-  document.getElementById('mTotal').value=currentResult.total.toFixed(2);
+  document.getElementById('mTotal').value=(+currentResult.total||0).toFixed(2);
   document.getElementById('mCat').value=currentResult.category;
   document.getElementById('mPay').value=normPayment(currentResult.payment,currentResult.notes);
   fillLedgerSelect('mGrp', currentResult.grp!==undefined?currentResult.grp:(document.getElementById('resGrp')||{}).value||lastLedger());
@@ -1681,6 +1755,16 @@ function normPayment(p,notes){
 function migrate(list){
   let changed=false;
   list.forEach(r=>{
+    /* Eksik/bozuk alanlar (eski ya da elle düzenlenmiş yedekten gelebilir) listeyi çökertmesin */
+    if(!Array.isArray(r.items)){ r.items=[]; changed=true; }
+    else if(r.items.some(i=>!i||typeof i.name!=='string')){
+      r.items=r.items.filter(i=>i&&i.name!=null).map(i=>Object.assign({},i,{name:String(i.name)})); changed=true;
+    }
+    if(typeof r.total!=='number'||isNaN(r.total)){ r.total=toNumber(r.total)||0; changed=true; }
+    if(!CAT_NAMES.includes(r.category)){ r.category=normCategory(r.category,r.store); changed=true; }
+    if(typeof r.date!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(r.date)){ r.date=normDate(r.date); changed=true; }
+    if(typeof r.store!=='string'){ r.store=String(r.store||''); changed=true; }
+    if(r.notes!=null&&typeof r.notes!=='string'){ r.notes=String(r.notes); changed=true; }
     if(!r.pay){ r.pay=normPayment(r.payment,r.notes); changed=true; }
     const c=canonicalStore(r.store);
     if(r.store!==c){ r.store=c; changed=true; }
@@ -1723,6 +1807,7 @@ function saveReceipt(){
 function resetScan(){
   currentImage=null; currentResult=null;
   document.getElementById('fileInput').value='';
+  document.getElementById('changeBtn').style.display='none';
   document.getElementById('previewArea').style.display='none';
   document.getElementById('uploadArea').style.display='block';
   document.getElementById('analyzeBtn').disabled=true;
@@ -2054,10 +2139,10 @@ function card(r,q,i){
   if(r.items.length)meta.push(r.items.length+' KLM');
   return `<div class="receipt-card slip" onclick="showDetail(${r.id})" style="animation-delay:${Math.min(i||0,8)*38}ms">
     <div class="receipt-top">
-      <div class="receipt-store">${hl(esc(r.store),q)}</div>
+      <div class="receipt-store">${hl(r.store,q)}</div>
       <div class="receipt-amount">${money(r.total)}</div>
     </div>
-    <div class="receipt-meta">${r.grp?`<span class="receipt-tag led" style="color:${ledColor(r.grp)}">${ledIcon(r.grp)} ${esc(up(r.grp))}</span>`:''}${meta.map(m=>`<span class="receipt-tag">${esc(m)}</span>`).join('')}</div>
+    <div class="receipt-meta">${r.grp?`<span class="receipt-tag led" style="color:${esc(ledColor(r.grp))}">${esc(ledIcon(r.grp))} ${esc(up(r.grp))}</span>`:''}${meta.map(m=>`<span class="receipt-tag">${esc(m)}</span>`).join('')}</div>
   </div>`;
 }
 
@@ -2090,7 +2175,9 @@ function setPayFilter(f,el){
   el.classList.add('active'); doSearch();
 }
 function doSearch(){
-  const q=(document.getElementById('searchInput').value||'').toLowerCase().trim();
+  /* deacc: "BİM".toLowerCase() → "bi̇m" (noktalı i) olur ve "bim" ile eşleşmez; aksansız karşılaştır */
+  const q=deacc(document.getElementById('searchInput').value||'').trim();
+  const has=s=>deacc(s).includes(q);
   const all=getReceipts();
   let list=all;
   const lrow=document.getElementById('ledFilterRow');
@@ -2099,15 +2186,12 @@ function doSearch(){
   if(filter!=='all')list=list.filter(r=>r.category===filter);
   if(payFilter!=='all')list=list.filter(r=>(r.pay||'Diğer')===payFilter);
   if(q)list=list.filter(r=>
-    r.store.toLowerCase().includes(q)||
-    r.category.toLowerCase().includes(q)||
-    (r.grp||'').toLowerCase().includes(q)||
-    (r.notes||'').toLowerCase().includes(q)||
-    (r.items||[]).some(i=>i.name.toLowerCase().includes(q))
+    has(r.store)||has(r.category)||has(r.grp)||has(r.notes)||
+    (r.items||[]).some(i=>has(i.name))
   );
   const sum=list.reduce((s,r)=>s+r.total,0);
   document.getElementById('searchResults').innerHTML = list.length
-    ? `<div style="font-size:12px;color:var(--text2);margin-bottom:10px">${list.length} fiş · toplam <b style="color:var(--accent)">₺${sum.toFixed(2)}</b></div>`+list.map((r,i)=>card(r,q,i)).join('')
+    ? `<div class="result-count"><b>${list.length}</b> fiş · toplam <b>${money(sum)}</b></div>`+list.map((r,i)=>card(r,q,i)).join('')
     : `<div class="empty-state"><div class="empty-icon">🔍</div>${q?'"'+esc(q)+'" için sonuç yok':'Sonuç yok'}</div>`;
 }
 
@@ -2121,9 +2205,9 @@ function showDetail(id){
         <div class="r-store" style="font-size:21px">${esc(r.store)}</div>
         <div class="r-date">${fmtDate(r.date)}</div>
         <div class="badges">
-          <span class="category-badge" style="background:${c}1a;color:${c}">${catIcon(r.category)} ${r.category}</span>
-          ${r.pay&&r.pay!=='Diğer'?`<span class="category-badge" style="background:${PAY_COLOR[r.pay]}1a;color:${PAY_COLOR[r.pay]}">${r.pay}</span>`:''}
-          ${r.grp?`<span class="category-badge" style="background:${ledColor(r.grp)}1a;color:${ledColor(r.grp)}">${ledIcon(r.grp)} ${esc(r.grp)}</span>`:''}
+          <span class="category-badge" style="background:${c}1a;color:${c}">${catIcon(r.category)} ${esc(r.category)}</span>
+          ${r.pay&&PAY_COLOR[r.pay]&&r.pay!=='Diğer'?`<span class="category-badge" style="background:${PAY_COLOR[r.pay]}1a;color:${PAY_COLOR[r.pay]}">${esc(r.pay)}</span>`:''}
+          ${r.grp?`<span class="category-badge" style="background:${esc(ledColor(r.grp))}1a;color:${esc(ledColor(r.grp))}">${esc(ledIcon(r.grp))} ${esc(r.grp)}</span>`:''}
         </div>
       </div>
       <div class="r-total"><span class="lbl">Toplam</span><b>${money(r.total)}</b></div>
@@ -2135,26 +2219,50 @@ function showDetail(id){
     ${r.notes?`<div class="note">${esc(r.notes)}</div>`:''}
     <div class="lbl" style="margin:14px 0 0">Defter</div>
     <div class="led-pick">
-      ${getLedgers().map((l,i)=>`<div class="filter-chip${r.grp===l.name?' active':''}" onclick="setReceiptLedger(${r.id},${i})">${l.icon||'📁'} ${esc(l.name)}</div>`).join('')}
+      ${getLedgers().map((l,i)=>`<div class="filter-chip${r.grp===l.name?' active':''}" onclick="setReceiptLedger(${r.id},${i})">${esc(l.icon||'📁')} ${esc(l.name)}</div>`).join('')}
       <div class="filter-chip${r.grp?'':' active'}" onclick="setReceiptLedger(${r.id},-2)">Ayrılmamış</div>
     </div>
-    <button class="btn btn-danger" style="margin-top:16px" onclick="delReceipt(${r.id})">Fişi sil</button>`;
+    <button class="btn btn-outline" style="margin-top:16px" onclick="editSaved(${r.id})">Düzenle</button>
+    <button class="btn btn-danger" style="margin-top:8px" onclick="delReceipt(${r.id})">Fişi sil</button>`;
   document.getElementById('detailModal').classList.add('show');
 }
 
 function delReceipt(id){
   if(!confirm('Bu fiş silinsin mi?'))return;
   saveReceipts(getReceipts().filter(r=>r.id!==id));
-  closeModal('detailModal'); renderReceipts(); doSearch();
+  closeModal('detailModal'); refreshLedgerViews();
   showToast('Fiş silindi');
 }
 
 /* ══════════════════ MANUAL / EDIT ══════════════════ */
+/* Kayıtlı fişi düzenle — aynı form, editId ile */
+function editSaved(id){
+  const r=getReceipts().find(x=>x.id===id); if(!r)return;
+  editMode=false; editId=id;
+  document.getElementById('entryTitle').textContent='Fişi düzenle';
+  document.getElementById('mStore').value=r.store;
+  document.getElementById('mDate').value=r.date;
+  document.getElementById('mTotal').value=(+r.total||0).toFixed(2);
+  document.getElementById('mCat').value=CAT_NAMES.includes(r.category)?r.category:'Diğer';
+  document.getElementById('mPay').value=PAYMENTS.includes(r.pay)?r.pay:'Diğer';
+  fillLedgerSelect('mGrp',r.grp||'');
+  document.getElementById('mNotes').value=r.notes||'';
+  closeModal('detailModal');
+  document.getElementById('manualModal').classList.add('show');
+}
+
+/* Toplam elle değişince, çıkarılan satır varsa fişin ham toplamını (gross) ona göre kaydır —
+   yoksa satırların hepsi geri alındığında elle girilen tutar kaybolur. */
+function setTotalKeepCuts(r,total){
+  r.total=round2(total);
+  if((r.removed||[]).length)r.gross=round2(r.total+cutTotal(r));
+}
+
 function showManualEntry(){
-  editMode=false;
+  editMode=false; editId=null;
   document.getElementById('entryTitle').textContent='Fişi elle ekle';
   document.getElementById('mStore').value='';
-  document.getElementById('mDate').value=new Date().toISOString().slice(0,10);
+  document.getElementById('mDate').value=today();
   document.getElementById('mTotal').value='';
   document.getElementById('mCat').value='Gıda';
   document.getElementById('mPay').value='Kredi Kartı';
@@ -2165,20 +2273,37 @@ function showManualEntry(){
 function saveEntry(){
   const store=document.getElementById('mStore').value.trim();
   const date=document.getElementById('mDate').value;
-  const total=parseFloat(document.getElementById('mTotal').value);
+  /* Metin alanı: "12,50", "12.50", "1.250,00" hepsi olur; "1.250" binlik sayılır */
+  let rawT=document.getElementById('mTotal').value.trim();
+  if(/^\d{1,3}(\.\d{3})+$/.test(rawT))rawT=rawT.replace(/\./g,'');
+  const total=toNumber(rawT);
   const cat=document.getElementById('mCat').value;
   const pay=document.getElementById('mPay').value;
   const grp=document.getElementById('mGrp').value||'';
   const notes=document.getElementById('mNotes').value.trim();
-  if(!store||!date||isNaN(total)){ showToast('⚠️ Mağaza, tarih ve tutar gerekli','error'); return; }
+  if(!store||!date||total==null){ showToast('⚠️ Mağaza, tarih ve tutar gerekli','error'); return; }
 
   if(editMode&&currentResult){
     currentResult.store=store; currentResult.date=date;
-    currentResult.total=total; currentResult.category=cat; currentResult.notes=notes;
+    setTotalKeepCuts(currentResult,total); currentResult.category=cat; currentResult.notes=notes;
     currentResult.payment=pay; currentResult.grp=grp;
     closeModal('manualModal'); showResult(currentResult);
     showToast('✏️ Güncellendi — şimdi kaydedebilirsin');
     editMode=false; return;
+  }
+
+  if(editId!=null){
+    const list=getReceipts(), r=list.find(x=>x.id===editId);
+    const id=editId; editId=null;
+    if(!r){ closeModal('manualModal'); showToast('⚠️ Fiş bulunamadı','error'); return; }
+    const cs=canonicalStore(store);
+    Object.assign(r,{store:cs,skey:storeKey(cs),date,category:cat,pay,grp,notes});
+    setTotalKeepCuts(r,total);
+    saveReceipts(list); rememberLedger(grp);
+    closeModal('manualModal'); refreshLedgerViews(); showDetail(id);
+    showToast('✏️ Fiş güncellendi','success');
+    checkBudget(r);
+    return;
   }
   const list=getReceipts();
   const cs=canonicalStore(store);
@@ -2189,7 +2314,7 @@ function saveEntry(){
   closeModal('manualModal');
   showToast('Kaydedildi','success');
   checkBudget(rec);
-  renderReceipts();
+  refreshLedgerViews();
 }
 
 /* ══════════════════ YEDEKLEME ══════════════════ */
@@ -2217,7 +2342,7 @@ function backupData(){
   const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
   const a=document.createElement('a');
   a.href=URL.createObjectURL(blob);
-  a.download='fistakip-yedek-'+(withKeys?'ANAHTARLI-':'')+new Date().toISOString().slice(0,10)+'.json';
+  a.download='fistakip-yedek-'+(withKeys?'ANAHTARLI-':'')+today()+'.json';
   a.click();
   setTimeout(()=>URL.revokeObjectURL(a.href),2000);
   showToast(list.length+' fiş yedeklendi'+(withKeys?' · anahtarlar dahil':''),'success');
@@ -2234,7 +2359,7 @@ function restoreData(e){
       const cur=getReceipts();
       const seen=new Set(cur.map(r=>r.id));
       let added=0;
-      incoming.forEach(r=>{ if(r&&r.id&&!seen.has(r.id)){ cur.push(r); seen.add(r.id); added++; } });
+      incoming.forEach(r=>{ if(r&&typeof r==='object'&&r.id&&!seen.has(r.id)){ cur.push(r); seen.add(r.id); added++; } });
       cur.sort((a,b)=>new Date(b.date)-new Date(a.date));
       migrate(cur); saveReceipts(cur);
 
@@ -2246,7 +2371,7 @@ function restoreData(e){
       }
       if(d.budgets&&typeof d.budgets==='object'&&hasBudgets(d.budgets)){
         putBudgets(Object.assign(getBudgets(),d.budgets));
-        extra=' · bütçeler yüklendi';
+        extra+=' · bütçeler yüklendi';
       }
       if(d.settings&&(d.settings.geminiKey||d.settings.claudeKey||d.settings.ocrspaceKey)
          &&confirm('Bu yedek API anahtarları içeriyor.\n\nAyarlarına yüklensin mi?')){
@@ -2254,7 +2379,7 @@ function restoreData(e){
         paintBadge(); paintAbout(); extra+=' · anahtarlar yüklendi';
       }
       showToast(added+' yeni fiş eklendi (toplam '+cur.length+')'+extra,'success');
-      renderDashboard(); renderReceipts();
+      refreshLedgerViews();
     }catch(err){ showToast('❌ Dosya okunamadı: '+err.message,'error'); }
     e.target.value='';
   };
@@ -2266,8 +2391,15 @@ async function exportData(){
   const list=getReceipts();
   if(!list.length){ showToast('⚠️ Veri yok'); return; }
   showToast('Excel hazırlanıyor');
-  if(!window.XLSX)await loadScript('https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js');
+  try{
+    if(!window.XLSX)await loadScript('https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js');
+    buildExcel(list);
+  }catch(e){
+    showToast('❌ Excel hazırlanamadı'+(window.XLSX?'':' — internet bağlantını kontrol et'),'error');
+  }
+}
 
+function buildExcel(list){
   const wb=XLSX.utils.book_new();
   const rows=[['Tarih','Mağaza','Defter','Kategori','Ödeme','Toplam (₺)','Fiş Toplamı (₺)','Çıkarılan (₺)','Ürün Sayısı','Notlar']];
   list.forEach(r=>rows.push([r.date,r.store,r.grp||'Ayrılmamış',r.category,r.pay||'',+r.total.toFixed(2),
@@ -2331,7 +2463,7 @@ async function exportData(){
     XLSX.utils.book_append_sheet(wb,wsH,'Ürün Fiyatları');
   }
 
-  XLSX.writeFile(wb,'fistakip_'+new Date().toISOString().slice(0,10)+'.xlsx');
+  XLSX.writeFile(wb,'fistakip_'+today()+'.xlsx');
   showToast('Excel indirildi','success');
 }
 
@@ -2340,7 +2472,18 @@ const closeModal=id=>document.getElementById(id).classList.remove('show');
 const money=n=>'₺'+Number(n||0).toLocaleString('tr-TR',{minimumFractionDigits:2,maximumFractionDigits:2});
 const fmtShort=d=>{try{const x=new Date(d);return String(x.getDate()).padStart(2,'0')+'.'+String(x.getMonth()+1).padStart(2,'0')+'.'+x.getFullYear()}catch{return d}};
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const hl=(t,q)=>q?t.replace(new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi'),'<mark style="background:rgba(196,127,23,.25);border-radius:2px">$1</mark>'):t;
+/* Ham metinde aksansız eşleşmeyi işaretle; çıktı HTML-kaçışlı. q zaten deacc'lı. */
+function hl(t,q){
+  t=String(t??'');
+  const f=deacc(t);
+  if(!q||f.length!==t.length)return esc(t);
+  let out='',i=0,j;
+  while((j=f.indexOf(q,i))>-1){
+    out+=esc(t.slice(i,j))+'<mark style="background:rgba(196,127,23,.25);border-radius:2px">'+esc(t.slice(j,j+q.length))+'</mark>';
+    i=j+q.length;
+  }
+  return out+esc(t.slice(i));
+}
 const fmtDate=d=>{try{return new Date(d).toLocaleDateString('tr-TR',{day:'numeric',month:'long',year:'numeric'})}catch{return d}};
 function showToast(m,t=''){
   const el=document.getElementById('toast');
@@ -2354,6 +2497,11 @@ const catIcon=c=>ICONS[c]||'📦';
 
 paintBadge();
 renderDashboard();
+
+/* Çevrimdışı açılış — yalnız web'de (Capacitor APK'da dosyalar zaten pakette) */
+if('serviceWorker' in navigator && location.protocol==='https:' && !window.Capacitor){
+  navigator.serviceWorker.register('sw.js').catch(()=>{});
+}
 </script>
 </body>
 </html>

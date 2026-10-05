@@ -22,7 +22,7 @@ Türk market ve mağaza fişlerini okuyup harcamanı defterler. Fişi tarar, iç
 
 | | |
 |---|---|
-| 📷 **Fiş okuma** | Dört ayrı motor. Biri tamamen çevrimdışı çalışır. |
+| 📷 **Fiş okuma** | Dört ayrı motor. Biri cihazda çalışır, fiş verisi dışarı çıkmaz. |
 | 🏬 **Mağaza birleştirme** | "LC WAIKIKI" ile "LC Waikiki" tek mağaza sayılır. 40+ Türk markası tanınır. |
 | 🗂 **Otomatik kategori** | Gıda, Ev & Yaşam, Kıyafet, Yakıt, Eczane ve 4 kategori daha. |
 | 📒 **Defterler** | Kategoriden bağımsız ikinci ayrım: İşyeri, Ev ya da kendi koyduğun isim. |

@@ -4,6 +4,33 @@ Bu proje [Semantic Versioning](https://semver.org/lang/tr/) kullanır.
 
 ---
 
+## [1.4.1] — 2026-10-05
+
+### Eklendi
+- **Kayıtlı fişi düzenleme.** Fiş detayındaki **Düzenle** ile mağaza, tarih, tutar, kategori, ödeme, defter ve not sonradan değiştirilebilir.
+- **Başka fotoğraf seç** düğmesi — yanlış fotoğraf seçilince ya da okuma başarısız olunca sayfayı yenilemeye gerek yok.
+- Web sürümü için service worker (`sw.js`): internet yokken uygulama son kopyadan açılır. Ağ önce çalışır, güncellemeler gecikmez.
+- Ara sekmesine **Kozmetik** kategori çipi ve **Diğer** ödeme çipi.
+
+### Düzeltildi
+- **Aramada İ harfli mağazalar bulunmuyordu** — "bim" araması "BİM"i, "istikbal" araması "İstikbal"i getirmiyordu. Arama artık Türkçe karakterlerden bağımsız.
+- **Gece 00:00–03:00 arası tarih bir gün geri yazılıyordu** (UTC). Elle eklemede, okunamayan tarih yedeğinde ve yedek/Excel dosya adlarında artık yerel gün kullanılıyor.
+- **Claude büyük telefon fotoğraflarında hata veriyordu** (5 MB sınırı). Gemini ve Claude'a görsel artık ~3,5 MB JPEG'e küçültülerek gidiyor.
+- Claude için de geçici hatalarda (500/502/503/504/529) otomatik tekrar deneme; model bulunamadı, görsel uygun değil gibi durumlar için anlaşılır mesajlar.
+- Claude model listesi güncellendi (Sonnet 5.5); eski kayıtlı model adı varsayılana çekilir.
+- Özet sekmesindeyken elle eklenen ya da silinen fiş toplamlara hemen yansımıyordu.
+- Yapay zekâ yanıtı doğrulanıyor: metin olarak gelen tutarlar ("1.250,00"), listede olmayan kategoriler ve bozuk tarihler düzeltiliyor.
+- Eksik alanlı (ör. ürün listesi olmayan) bir kayıt, geri yüklemeden sonra bütün listeyi çökertebiliyordu; kayıtlar artık açılışta onarılıyor.
+- Geri yüklemede "defter eklendi" bilgisi "bütçeler yüklendi" mesajıyla eziliyordu.
+- *Düzelt* ile toplam değiştirildikten sonra çıkarılan satırlar geri alınınca elle girilen tutar kayboluyordu.
+- Tutar alanı virgüllü girişi ("12,50") kabul ediyor.
+- İnternet yokken Excel'e aktarma sessizce takılıyordu; artık hata mesajı veriyor. İndirilemeyen kütüphane bir sonraki denemede yeniden yükleniyor.
+- Yerel OCR'da sayfa düzeni ayarı (PSM 6) Tesseract v5'te yok sayılıyordu; artık uygulanıyor. Açıklamadaki "internet gerekmez" ifadesi düzeltildi — ilk kullanımda motor ve dil paketi indirilir.
+- Kategori, ödeme ve defter simgesi HTML'e kaçışsız yazılıyordu.
+- Tanımsız CSS değişkenleri, fazladan `</div>`, 📊 düğmesine erişilebilir etiket.
+
+---
+
 ## [1.4.0] — 2026-08-26 · *Ayıklama*
 
 ### Eklendi
