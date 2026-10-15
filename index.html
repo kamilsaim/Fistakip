@@ -2589,7 +2589,8 @@ const catIcon=c=>ICONS[c]||'📦';
 paintBadge();
 renderDashboard();
 
-/* Çevrimdışı açılış — yalnız web'de (Capacitor APK'da dosyalar zaten pakette) */
+/* Çevrimdışı açılış. Tarayıcıda ve Android kabuğunda (Kotlin WebView, Capacitor değil) kayıt edilir;
+   iOS kabuğunda (Capacitor) atlanır — WKWebView'de service worker yok */
 if('serviceWorker' in navigator && location.protocol==='https:' && !window.Capacitor){
   navigator.serviceWorker.register('sw.js').catch(()=>{});
 }

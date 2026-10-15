@@ -47,6 +47,8 @@ Fiş okunamazsa elle de girebilirsin; yanlış okunan alanı kaydetmeden *Düzel
 
 iPhone'da Paylaş → *Ana Ekrana Ekle*, Android'de menü → *Uygulamayı yükle* dersen ana ekrana **fiş logosuyla** iner ve adres çubuğu olmadan açılır.
 
+**Uygulama olarak:** Android için APK, iPhone için App Store uygulaması (şu an TestFlight'ta, incelemeye hazırlanıyor). İkisi de bu sayfayı açan ince birer kabuktur — web'e gelen her güncelleme uygulamalara yeniden kurulum gerekmeden yansır. Her birinin hafızası ayrıdır; fişleri taşımak için *Yedek al* → *Geri yükle*.
+
 ---
 
 ## Okuma motorları
@@ -122,8 +124,10 @@ Fişin kendi toplamı kaybolmaz: altta `Fiş toplamı ₺300,00 · 2 satır çı
 - **Yapay zeka motorlarında** fotoğraf yalnız senin seçtiğin sağlayıcıya gider. Gemini'nin ücretsiz katmanında Google, gönderilen veriyi model eğitiminde kullanabilir — hassas fişler için ücretli katmana geç ya da yerel OCR kullan.
 - **API anahtarları** cihazda kalır, depoya asla yazılmaz.
 
+Ayrıntılı metin: [Gizlilik politikası](https://kamilsaim.github.io/Fistakip/gizlilik.html)
+
 > [!WARNING]
-> Veriler tarayıcı hafızasında olduğu için iOS Safari, uzun süre açılmayan sitelerin verisini silebilir. Ayarlar → **Yedek al** ile ara sıra JSON yedeği çıkar.
+> Veriler tarayıcı hafızasında olduğu için iOS Safari, uzun süre açılmayan sitelerin verisini silebilir (App Store uygulamasında bu sorun yok). Ayarlar → **Yedek al** ile ara sıra JSON yedeği çıkar.
 
 ---
 
@@ -138,7 +142,9 @@ Tek bir `index.html`. Derleme aracı, paket yöneticisi, `node_modules` yok. Kü
 
 Uygulama açılırken hiçbiri inmez.
 
-Yanında duran diğer dosyalar: ana ekran ikonu (`icon-512.png`), `manifest.webmanifest`, logo varyantları ve `sw.js` — web sürümünü çevrimdışı açan küçük bir service worker (ağ önce çalışır, güncellemeyi geciktirmez; API çağrılarını önbelleğe almaz, APK'da devre dışı). Uygulama mantığının tamamı `index.html` içinde.
+Yanında duran diğer dosyalar: ana ekran ikonu (`icon-512.png`), `manifest.webmanifest`, logo varyantları, `gizlilik.html` ve `sw.js` — web sürümünü çevrimdışı açan küçük bir service worker (ağ önce çalışır, güncellemeyi geciktirmez; API çağrılarını önbelleğe almaz; Android kabuğunun WebView'inde de çalışır, iOS uygulamasında kayıt edilmez). Uygulama mantığının tamamı `index.html` içinde.
+
+iOS uygulamasına özgü küçük farklar (`IOS_APP`): çentik boşluğu, kamera/galeri seçimi, yedek ve Excel'in paylaşım menüsüyle kaydedilmesi, bağlantıların uygulama içi Safari'de açılması. Yalnız iOS kabuğunda devreye girer; web ve Android değişmez.
 
 ---
 
@@ -182,6 +188,7 @@ Logo ailesi ve kullanım kuralları: [`logo-kilavuz.html`](logo-kilavuz.html)
 - [x] Fişten ürün satırı çıkarma — tutarı toplamdan düşerek *(v1.4.0)*
 - [x] Kayıtlı fişi düzenleme, çevrimdışı açılış *(v1.4.1)*
 - [x] iOS uygulaması hazırlığı, gizlilik politikası *(v1.5.0)*
+- [ ] iOS uygulamasının App Store'da yayını
 - [ ] Taksitli alışveriş takibi
 - [ ] Fiş fotoğrafının kayda iliştirilmesi
 - [ ] Çoklu cihaz eşitleme (isteğe bağlı, kendi sunucunla)
