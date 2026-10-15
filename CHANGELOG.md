@@ -4,6 +4,14 @@ Bu proje [Semantic Versioning](https://semver.org/lang/tr/) kullanır.
 
 ---
 
+## [1.5.1] — 2026-10-15
+
+### Düzeltildi
+- **Anahtarlı yedeği geri yükledikten sonra anahtarlar kayboluyordu.** Geri yükleme Ayarlar penceresinde yapıldığı için kutular boş kalıyordu; ardından *Kaydet*'e basılınca boş kutular yeni gelen anahtarların üstüne yazılıyordu. Kutular artık geri yüklenen anahtarlarla doluyor.
+- Yedekte API anahtarı yoksa geri yükleme mesajı bunu söylüyor ("yedekte API anahtarı yok").
+
+---
+
 ## [1.5.0] — 2026-10-15
 
 ### Eklendi
