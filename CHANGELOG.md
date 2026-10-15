@@ -4,6 +4,21 @@ Bu proje [Semantic Versioning](https://semver.org/lang/tr/) kullanır.
 
 ---
 
+## [1.5.0] — 2026-10-15
+
+### Eklendi
+- **iOS uygulaması hazırlığı.** App Store'daki iOS kabuğu (Capacitor) aynı sayfayı açar; iOS'a özgü uyarlamalar yalnız o uygulamada devreye girer, web ve Android görünümü değişmez:
+  - Üst çubuk çentik / Dinamik Ada'nın altında kalır (`viewport-fit=cover` + `safe-area-inset-top`).
+  - Fiş fotoğrafında kamera ya da galeri seçilebilir (iOS'ta `capture` yalnız kamerayı açıyordu).
+  - Yedek ve Excel paylaşım menüsüyle kaydedilir ("Dosyalar'a Kaydet") — iOS uygulamasında indirme yok.
+  - API anahtarı bağlantıları uygulama içi Safari'de açılır.
+- **Gizlilik politikası** sayfası (`gizlilik.html`), Ayarlar → Hakkında'dan bağlantılı.
+
+### Değişti
+- Silme, defter ekleme ve benzeri onaylar tarayıcının `confirm`/`prompt` kutusu yerine uygulama içi kutuyla soruluyor.
+
+---
+
 ## [1.4.1] — 2026-10-05
 
 ### Eklendi

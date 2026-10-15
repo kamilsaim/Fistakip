@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FişTakip — Gizlilik Politikası</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<style>
+  :root{--paper:#e7eae8;--slip:#fbfcfb;--ink:#1a2320;--ink2:#5d6a66;--rule:#c9d2ce;--fiscal:#bd2731}
+  @media (prefers-color-scheme:dark){:root{--paper:#0f1211;--slip:#171c1a;--ink:#e3e8e5;--ink2:#9aa5a0;--rule:#2a312e;--fiscal:#e0575f}}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.65 -apple-system,system-ui,'Segoe UI',sans-serif;padding:24px 16px 48px}
+  main{max-width:680px;margin:0 auto;background:var(--slip);border:1px solid var(--rule);border-radius:14px;padding:24px 22px}
+  h1{font-size:24px;margin:0 0 4px;letter-spacing:-.02em}
+  h2{font-size:16px;margin:26px 0 6px}
+  .date{color:var(--ink2);font-size:13px;margin:0 0 18px}
+  p,li{color:var(--ink)}
+  ul{padding-left:20px}
+  a{color:var(--fiscal)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:8px 0}
+  th,td{border-bottom:1px solid var(--rule);text-align:left;padding:7px 6px;vertical-align:top}
+  th{color:var(--ink2);font-weight:600}
+</style>
+</head>
+<body>
+<main>
+<h1>Gizlilik Politikası</h1>
+<p class="date">FişTakip · Son güncelleme: 15 Ekim 2026</p>
+
+<p>FişTakip; web sürümü (<a href="https://kamilsaim.github.io/Fistakip/">kamilsaim.github.io/Fistakip</a>),
+Android ve iOS uygulamasıyla alışveriş fişlerini okuyup harcamalarını defterlemene yarayan bir uygulamadır.
+Bu sayfa hangi verinin nerede durduğunu ve nereye gittiğini anlatır.</p>
+
+<h2>Özet</h2>
+<ul>
+  <li><b>Hesap yok, sunucu yok.</b> Uygulamaya kayıt olunmaz; geliştiricinin verini topladığı bir sunucu bulunmaz.</li>
+  <li><b>Fişlerin cihazında kalır.</b> Kayıtlar, defterler, bütçeler ve ayarlar yalnızca cihazının yerel hafızasında saklanır.</li>
+  <li><b>Analitik, reklam ve izleme yok.</b> Kullanım istatistiği, reklam kimliği ya da üçüncü taraf takip aracı kullanılmaz.</li>
+</ul>
+
+<h2>Fiş fotoğrafları ve okuma motorları</h2>
+<p>Fişi okutmak için seçtiğin motor, fotoğrafın nereye gideceğini belirler. Varsayılan motor cihazda çalışır.</p>
+<table>
+  <tr><th>Motor</th><th>Fotoğraf nereye gider</th></tr>
+  <tr><td>Yerel OCR (varsayılan)</td><td>Hiçbir yere. Metin cihazında okunur. İlk kullanımda okuma motoru ve Türkçe dil paketi internetten indirilir.</td></tr>
+  <tr><td>Gemini</td><td>Kendi API anahtarınla doğrudan Google'a (Google Gemini API).</td></tr>
+  <tr><td>Claude</td><td>Kendi API anahtarınla doğrudan Anthropic'e (Claude API).</td></tr>
+  <tr><td>OCR.space</td><td>Kendi API anahtarınla doğrudan OCR.space'e.</td></tr>
+</table>
+<p>Yapay zekâ motorları yalnızca sen seçip kendi anahtarını girdiğinde kullanılır. Fotoğraf geliştiricinin
+sunucusundan geçmez; ilgili sağlayıcının kendi gizlilik koşulları geçerlidir. Gemini'nin ücretsiz katmanında
+Google gönderilen veriyi hizmetini geliştirmek için kullanabilir — hassas fişlerde yerel OCR'ı tercih et.
+Fiş fotoğrafları uygulamada saklanmaz; yalnızca okunan metin (mağaza, tarih, tutar, ürünler) kaydedilir.</p>
+
+<h2>Kamera ve fotoğraflar</h2>
+<p>Kamera ve fotoğraf arşivi izni yalnızca okutmak istediğin fişin fotoğrafını çekmek ya da seçmek için istenir.
+Başka hiçbir fotoğrafa erişilmez.</p>
+
+<h2>API anahtarları</h2>
+<p>Girdiğin anahtarlar yalnızca cihazında saklanır ve yalnızca ilgili sağlayıcıya yapılan isteklerde kullanılır.
+"Anahtarları da yedekle" seçeneğini işaretlersen yedek dosyasına düz metin olarak yazılır — bu dosyayı kimseyle paylaşma.</p>
+
+<h2>Yedek ve Excel dosyaları</h2>
+<p>Yedek (JSON) ve Excel dosyaları cihazında oluşturulur; nereye kaydedileceğini ya da kiminle paylaşılacağını sen seçersin.</p>
+
+<h2>Verilerin silinmesi</h2>
+<p>Hesap olmadığı için silinecek bir sunucu kaydı yoktur. Fişlerini uygulama içinden tek tek silebilir ya da
+uygulamayı kaldırarak tüm verileri cihazından silebilirsin.</p>
+
+<h2>Çocuklar</h2>
+<p>Uygulama çocuklara yönelik değildir ve kimseden kişisel bilgi toplamaz.</p>
+
+<h2>İletişim</h2>
+<p>Sorular ve istekler için: <a href="https://github.com/kamilsaim/Fistakip/issues">GitHub üzerinden bildirim aç</a>.</p>
+</main>
+</body>
+</html>

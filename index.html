@@ -3,6 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<script>
+/* iOS uygulaması (Capacitor kabuğu): sayfa ekranın en tepesinden başlar → çentik/Dinamik Ada
+   boşluğu için viewport-fit=cover gerekir. Yalnız iOS'ta; web ve Android görünümü değişmez. */
+if(window.Capacitor&&window.Capacitor.getPlatform&&window.Capacitor.getPlatform()==='ios'){
+  document.documentElement.classList.add('ios-app');
+  const v=document.querySelector('meta[name=viewport]'); v.content+=', viewport-fit=cover';
+}
+</script>
 <meta name="theme-color" content="#e7eae8" media="(prefers-color-scheme:light)">
 <meta name="theme-color" content="#0f1211" media="(prefers-color-scheme:dark)">
 <title>FişTakip — Akıllı Alışveriş Defteri</title>
@@ -87,7 +95,8 @@
   .topbar{
     position:sticky;top:0;z-index:60;background:var(--paper);
     border-bottom:1px solid var(--rule);
-    padding:13px 16px 11px;display:flex;align-items:center;justify-content:space-between;
+    padding:calc(13px + env(safe-area-inset-top,0px)) 16px 11px;
+    display:flex;align-items:center;justify-content:space-between;
   }
   .logo{display:flex;align-items:center;gap:9px}
   .logo-mark{width:25px;height:25px;flex:0 0 auto;color:var(--ink)}
@@ -391,6 +400,13 @@
   .modal-close svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round}
   .modal h2{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:18px;
     letter-spacing:-.025em;margin-bottom:14px}
+
+  /* onay / ad sorma kutusu — tarayıcının confirm/prompt'u yerine (iOS'ta adres başlığıyla çıkıyor) */
+  #askModal{z-index:250}
+  #askModal .modal{max-width:360px}
+  .ask-msg{font-size:14px;line-height:1.5;color:var(--ink);white-space:pre-line;margin-bottom:14px}
+  .ask-btns{display:flex;gap:9px;margin-top:4px}
+  .ask-btns .btn{margin-top:0}
 
   /* ═══ FORM ═══ */
   .form-group{margin-bottom:13px}
@@ -742,6 +758,7 @@
       <div class="about-row"><span class="lbl">Aktif motor</span><b id="abEngine">—</b></div>
       <div class="tear" style="margin:12px 0"></div>
       <a class="key-link" id="abRepo" href="#" target="_blank" rel="noopener">Kaynak kodu · GitHub</a>
+      <a class="key-link" href="https://kamilsaim.github.io/Fistakip/gizlilik.html" target="_blank" rel="noopener" style="margin-left:14px">Gizlilik</a>
       <p style="font-size:11.5px;color:var(--ink3);margin-top:10px;line-height:1.5">
         Fişlerin bu cihazdan çıkmaz. Yerel OCR'da hiçbir yere,
         yapay zeka motorlarında yalnız seçtiğin sağlayıcıya gider.
@@ -759,14 +776,79 @@
 
 <div class="toast" id="toast"></div>
 
+<!-- ONAY / AD SORMA (ask) -->
+<div class="modal-overlay" id="askModal">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="ask-msg" id="askMsg"></div>
+    <input class="form-input" id="askInput" style="display:none;margin-bottom:14px" maxlength="24" autocomplete="off">
+    <div class="ask-btns">
+      <button class="btn btn-outline" id="askNo">Vazgeç</button>
+      <button class="btn btn-primary" id="askYes">Tamam</button>
+    </div>
+  </div>
+</div>
+
 <script>
 /* ══════════════════ SÜRÜM ══════════════════ */
 const APP={
-  version:'1.4.1',
-  released:'2026-10-05',
-  codename:'Ayıklama',
+  version:'1.5.0',
+  released:'2026-10-15',
+  codename:'iPhone',
   repo:'https://github.com/kamilsaim/Fistakip'
 };
+
+/* ══════════════════ iOS UYGULAMASI ══════════════════ */
+/* App Store'daki iOS kabuğu (Capacitor) bu sayfayı açar. Android kabuğu Capacitor değil, kendi WebView'i. */
+const IOS_APP=document.documentElement.classList.contains('ios-app');
+const NATIVE=IOS_APP?(window.Capacitor.Plugins||{}):{};
+if(IOS_APP){
+  // capture varken iOS doğrudan kamerayı açar; yoksa "Fotoğraf Arşivi / Fotoğraf Çek" menüsü çıkar
+  document.getElementById('fileInput')?.removeAttribute('capture');
+  // Anahtar alma bağlantıları uygulama içi Safari'de açılsın (kapatınca uygulamaya dönülür)
+  document.addEventListener('click',e=>{
+    const a=e.target.closest&&e.target.closest('a[target=_blank]');
+    if(!a||!NATIVE.Browser||!/^https?:/.test(a.href))return;
+    e.preventDefault(); NATIVE.Browser.open({url:a.href});
+  },true); // yakalama aşaması: bağlantılar modal içinde, .modal tıklamayı stopPropagation ile kesiyor
+}
+
+/* Dosya kaydet. Tarayıcı ve Android'de indirme; iOS uygulamasında WKWebView blob indirmediği için
+   dosya önbelleğe yazılır ve paylaşım menüsü açılır ("Dosyalar'a Kaydet", AirDrop, Mail…).
+   Dönüş: true = kaydedildi/paylaşıldı, false = kullanıcı vazgeçti */
+async function saveFile(name,blob){
+  if(IOS_APP&&NATIVE.Filesystem&&NATIVE.Share){
+    const data=await new Promise((ok,no)=>{const r=new FileReader();
+      r.onload=()=>ok(String(r.result).split(',')[1]); r.onerror=()=>no(r.error); r.readAsDataURL(blob);});
+    const {uri}=await NATIVE.Filesystem.writeFile({path:name,data,directory:'CACHE'});
+    try{ await NATIVE.Share.share({title:name,files:[uri]}); }
+    catch(e){ if(/cancel/i.test(e&&e.message||''))return false; throw e; }
+    return true;
+  }
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob); a.download=name; a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),2000);
+  return true;
+}
+
+/* confirm/prompt yerine uygulama içi kutu. ask('Silinsin mi?',{ok:'Sil',danger:true}) → true/false;
+   ask('Ad?',{input:''}) → yazılan metin ya da null */
+function ask(msg,o={}){
+  const m=document.getElementById('askModal'), inp=document.getElementById('askInput');
+  const yes=document.getElementById('askYes'), no=document.getElementById('askNo');
+  const isInput=o.input!==undefined;
+  document.getElementById('askMsg').textContent=msg;
+  inp.style.display=isInput?'':'none'; inp.value=isInput?o.input:''; inp.placeholder=o.placeholder||'';
+  yes.textContent=o.ok||'Tamam'; no.textContent=o.cancel||'Vazgeç';
+  yes.className='btn '+(o.danger?'btn-danger':'btn-primary');
+  m.classList.add('show');
+  if(isInput)setTimeout(()=>inp.focus(),60);
+  return new Promise(res=>{
+    const done=v=>{ m.classList.remove('show'); yes.onclick=no.onclick=m.onclick=inp.onkeydown=null; res(v); };
+    yes.onclick=()=>done(isInput?inp.value:true);
+    no.onclick=m.onclick=()=>done(isInput?null:false);
+    inp.onkeydown=e=>{ if(e.key==='Enter')yes.onclick(); };
+  });
+}
 
 /* ══════════════════ TARİH ══════════════════ */
 /* Yerel gün (YYYY-MM-DD). toISOString() UTC verir — Türkiye'de gece 00-03 arası dünü yazar. */
@@ -958,8 +1040,8 @@ function editLedger(i,field,val){
   t[field]=val||t[field];
   putLedgers(l); renderLedgerEditor(); refreshLedgerViews();
 }
-function addLedger(){
-  const name=(prompt('Yeni defter adı (örn: İşyerim, Ev, Araba)')||'').trim();
+async function addLedger(){
+  const name=((await ask('Yeni defter adı',{input:'',placeholder:'örn: İşyerim, Ev, Araba',ok:'Ekle'}))||'').trim();
   if(!name)return;
   const l=getLedgers();
   if(l.some(x=>x.name===name)){ showToast('⚠️ Bu isimde bir defter zaten var','error'); return; }
@@ -967,10 +1049,10 @@ function addLedger(){
   putLedgers(l); renderLedgerEditor(); refreshLedgerViews();
   showToast('"'+name+'" defteri eklendi','success');
 }
-function delLedger(i){
+async function delLedger(i){
   const l=getLedgers(), t=l[i]; if(!t)return;
   const used=getReceipts().filter(r=>r.grp===t.name).length;
-  if(!confirm('"'+t.name+'" defteri silinsin mi?'+(used?'\n\n'+used+' fiş "Ayrılmamış" olacak — fişlerin silinmez.':'')))return;
+  if(!await ask('"'+t.name+'" defteri silinsin mi?'+(used?'\n\n'+used+' fiş "Ayrılmamış" olacak — fişlerin silinmez.':''),{ok:'Sil',danger:true}))return;
   if(used){ const rl=getReceipts(); rl.forEach(r=>{ if(r.grp===t.name)r.grp=''; }); saveReceipts(rl); }
   if(ledFilter===t.name)ledFilter='all';
   if(searchLed===t.name)searchLed='all';
@@ -1773,7 +1855,7 @@ function migrate(list){
   return changed;
 }
 
-function saveReceipt(){
+async function saveReceipt(){
   if(!currentResult)return;
   const list=getReceipts();
   const store=canonicalStore(currentResult.store);
@@ -1783,7 +1865,7 @@ function saveReceipt(){
   const dup=list.find(r=>r.date===currentResult.date
     && Math.abs(r.total-currentResult.total)<0.01
     && r.skey===storeKey(store));
-  if(dup && !confirm(`Bu fiş zaten kayıtlı görünüyor:\n${dup.store} · ${fmtDate(dup.date)} · ₺${dup.total.toFixed(2)}\n\nYine de eklensin mi?`))return;
+  if(dup && !await ask(`Bu fiş zaten kayıtlı görünüyor:\n${dup.store} · ${fmtDate(dup.date)} · ₺${dup.total.toFixed(2)}\n\nYine de eklensin mi?`,{ok:'Ekle'}))return;
 
   const grp=(document.getElementById('resGrp')||{}).value||'';
   rememberLedger(grp);
@@ -1867,8 +1949,8 @@ function saveBudgets(){
   showToast(hasBudgets(b)?'Bütçe kaydedildi':'Limitler kaldırıldı','success');
 }
 
-function clearBudgets(){
-  if(!confirm('Tüm bütçe limitleri kaldırılsın mı?'))return;
+async function clearBudgets(){
+  if(!await ask('Tüm bütçe limitleri kaldırılsın mı?',{ok:'Kaldır',danger:true}))return;
   putBudgets({});
   closeModal('budgetModal');
   renderBudgets();
@@ -2227,8 +2309,8 @@ function showDetail(id){
   document.getElementById('detailModal').classList.add('show');
 }
 
-function delReceipt(id){
-  if(!confirm('Bu fiş silinsin mi?'))return;
+async function delReceipt(id){
+  if(!await ask('Bu fiş silinsin mi?',{ok:'Sil',danger:true}))return;
   saveReceipts(getReceipts().filter(r=>r.id!==id));
   closeModal('detailModal'); refreshLedgerViews();
   showToast('Fiş silindi');
@@ -2318,7 +2400,7 @@ function saveEntry(){
 }
 
 /* ══════════════════ YEDEKLEME ══════════════════ */
-function backupData(){
+async function backupData(){
   const list=getReceipts();
   if(!list.length){ showToast('Yedeklenecek fiş yok'); return; }
 
@@ -2333,25 +2415,23 @@ function backupData(){
     const c=getSettings();
     const any=c.geminiKey||c.claudeKey||c.ocrspaceKey;
     if(!any){ showToast('Kayıtlı API anahtarı yok'); return; }
-    if(!confirm('Bu yedek API anahtarlarını düz metin olarak taşıyacak.\n\nDosyayı kimseyle paylaşma. E-postayla gönderme.\n\nDevam edilsin mi?'))return;
+    if(!await ask('Bu yedek API anahtarlarını düz metin olarak taşıyacak.\n\nDosyayı kimseyle paylaşma. E-postayla gönderme.\n\nDevam edilsin mi?',{ok:'Devam'}))return;
     payload.containsSecrets=true;
     payload.settings={engine:c.engine,geminiKey:c.geminiKey,geminiModel:c.geminiModel,
       claudeKey:c.claudeKey,claudeModel:c.claudeModel,ocrspaceKey:c.ocrspaceKey};
   }
 
   const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(blob);
-  a.download='fistakip-yedek-'+(withKeys?'ANAHTARLI-':'')+today()+'.json';
-  a.click();
-  setTimeout(()=>URL.revokeObjectURL(a.href),2000);
+  try{
+    if(!await saveFile('fistakip-yedek-'+(withKeys?'ANAHTARLI-':'')+today()+'.json',blob))return;
+  }catch(e){ showToast('❌ Yedek kaydedilemedi: '+(e&&e.message||e),'error'); return; }
   showToast(list.length+' fiş yedeklendi'+(withKeys?' · anahtarlar dahil':''),'success');
 }
 
 function restoreData(e){
   const f=e.target.files[0]; if(!f)return;
   const rd=new FileReader();
-  rd.onload=ev=>{
+  rd.onload=async ev=>{
     try{
       const d=JSON.parse(ev.target.result);
       const incoming=Array.isArray(d)?d:(d.receipts||[]);
@@ -2374,7 +2454,7 @@ function restoreData(e){
         extra+=' · bütçeler yüklendi';
       }
       if(d.settings&&(d.settings.geminiKey||d.settings.claudeKey||d.settings.ocrspaceKey)
-         &&confirm('Bu yedek API anahtarları içeriyor.\n\nAyarlarına yüklensin mi?')){
+         &&await ask('Bu yedek API anahtarları içeriyor.\n\nAyarlarına yüklensin mi?',{ok:'Yükle'})){
         localStorage.setItem(SKEY,JSON.stringify(Object.assign(getSettings(),d.settings)));
         paintBadge(); paintAbout(); extra+=' · anahtarlar yüklendi';
       }
@@ -2393,13 +2473,14 @@ async function exportData(){
   showToast('Excel hazırlanıyor');
   try{
     if(!window.XLSX)await loadScript('https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js');
-    buildExcel(list);
   }catch(e){
-    showToast('❌ Excel hazırlanamadı'+(window.XLSX?'':' — internet bağlantını kontrol et'),'error');
+    showToast('❌ Excel hazırlanamadı — internet bağlantını kontrol et','error'); return;
   }
+  try{ await buildExcel(list); }
+  catch(e){ showToast('❌ Excel hazırlanamadı'+(e&&e.message?': '+e.message:''),'error'); }
 }
 
-function buildExcel(list){
+async function buildExcel(list){
   const wb=XLSX.utils.book_new();
   const rows=[['Tarih','Mağaza','Defter','Kategori','Ödeme','Toplam (₺)','Fiş Toplamı (₺)','Çıkarılan (₺)','Ürün Sayısı','Notlar']];
   list.forEach(r=>rows.push([r.date,r.store,r.grp||'Ayrılmamış',r.category,r.pay||'',+r.total.toFixed(2),
@@ -2463,7 +2544,14 @@ function buildExcel(list){
     XLSX.utils.book_append_sheet(wb,wsH,'Ürün Fiyatları');
   }
 
-  XLSX.writeFile(wb,'fistakip_'+today()+'.xlsx');
+  const name='fistakip_'+today()+'.xlsx';
+  if(IOS_APP){
+    const blob=new Blob([XLSX.write(wb,{bookType:'xlsx',type:'array'})],
+      {type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+    if(await saveFile(name,blob))showToast('Excel hazır','success');
+    return;
+  }
+  XLSX.writeFile(wb,name);
   showToast('Excel indirildi','success');
 }
 

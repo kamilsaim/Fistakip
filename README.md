@@ -6,8 +6,8 @@
 
 Tek bir HTML dosyası. Kurulum yok, sunucu yok, hesap yok.
 
-[![sürüm](https://img.shields.io/badge/sürüm-1.4.1-1A2320?style=flat-square)](CHANGELOG.md)
-[![tek dosya](https://img.shields.io/badge/tek_dosya-125_KB-BD2731?style=flat-square)](index.html)
+[![sürüm](https://img.shields.io/badge/sürüm-1.5.0-1A2320?style=flat-square)](CHANGELOG.md)
+[![tek dosya](https://img.shields.io/badge/tek_dosya-130_KB-BD2731?style=flat-square)](index.html)
 [![bağımlılık](https://img.shields.io/badge/bağımlılık-yok-1A2320?style=flat-square)](#nasıl-çalışır)
 
 [Canlı dene](https://kamilsaim.github.io/Fistakip/) · [Başla](#kullanmaya-başla) · [Okuma motorları](#okuma-motorları) · [Bütçe & fiyat](#bütçe-ve-fiyat-takibi) · [Gizlilik](#gizlilik)
@@ -181,6 +181,7 @@ Logo ailesi ve kullanım kuralları: [`logo-kilavuz.html`](logo-kilavuz.html)
 - [x] Defterler — iş / ev gibi ikinci bir ayrım *(v1.3.0)*
 - [x] Fişten ürün satırı çıkarma — tutarı toplamdan düşerek *(v1.4.0)*
 - [x] Kayıtlı fişi düzenleme, çevrimdışı açılış *(v1.4.1)*
+- [x] iOS uygulaması hazırlığı, gizlilik politikası *(v1.5.0)*
 - [ ] Taksitli alışveriş takibi
 - [ ] Fiş fotoğrafının kayda iliştirilmesi
 - [ ] Çoklu cihaz eşitleme (isteğe bağlı, kendi sunucunla)
